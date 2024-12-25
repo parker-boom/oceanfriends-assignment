@@ -71,3 +71,50 @@ export const BackButton = styled.div`
     transform: scale(0.95);
   }
 `
+
+export const ActiveFiltersBar = styled.div`
+  margin: 0px 24px 12px;
+  padding: 8px 12px;
+  background: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(41, 148, 46, 0.1);
+`
+
+export const FilterList = styled.div`
+  flex: 1;
+  display: flex;
+  gap: 8px;
+  overflow: hidden;
+  color: #29942e;
+  font-weight: 500;
+`
+
+export const ResetFiltersButton = styled.button`
+  background: white;
+  border: 1px solid #e0e0e0;
+  color: #666666;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+  margin-left: 12px;
+
+  &:hover {
+    background: #f8f8f8;
+    border-color: #d0d0d0;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+`

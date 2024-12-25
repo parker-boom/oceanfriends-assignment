@@ -1,26 +1,58 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { BiSearch, BiArrowBack } from 'react-icons/bi'
 import { FiFilter } from 'react-icons/fi'
 import { useNavigate } from 'react-router-dom'
 import { Container } from '../Home/home.styles'
-import {
-  SearchBarContainer,
-  SearchInput,
-  SearchIcon,
-} from '../shared/searchBar.styles'
-import {
-  InfoSection,
-  UserInfo,
-  Title,
-  Subtitle,
-  FilterButton,
-  HeaderContainer,
-  BackButton,
-} from './search.styles'
+import * as Shared from '../shared/searchBar.styles'
+import * as S from './search.styles'
+import { RiFilterOffLine } from 'react-icons/ri'
 
 function SearchMobile() {
   const navigate = useNavigate()
   const inputRef = useRef(null)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [activeFilters, setActiveFilters] = useState({
+    categories: [],
+    areas: [],
+  })
+  const [results, setResults] = useState([])
+
+  // Load filters on mount
+  useEffect(() => {
+    const savedCategories = JSON.parse(
+      localStorage.getItem('selectedCategories') || '[]',
+    )
+    const savedAreas = JSON.parse(localStorage.getItem('selectedAreas') || '[]')
+    setActiveFilters({
+      categories: savedCategories,
+      areas: savedAreas,
+    })
+  }, [])
+
+  // Search with filters
+  const handleSearch = async () => {
+    try {
+      const params = new URLSearchParams()
+      if (searchTerm) params.set('term', searchTerm)
+      if (activeFilters.categories.length) {
+        params.set('categories', activeFilters.categories.join(','))
+      }
+      if (activeFilters.areas.length) {
+        params.set('areas', activeFilters.areas.join(','))
+      }
+
+      const response = await fetch(`http://localhost:5000/api/search?${params}`)
+      const data = await response.json()
+      setResults(data)
+    } catch (error) {
+      console.error('Search failed:', error)
+    }
+  }
+
+  // Trigger search when filters change
+  useEffect(() => {
+    handleSearch()
+  }, [activeFilters])
 
   useEffect(() => {
     inputRef.current?.focus()
@@ -34,42 +66,68 @@ function SearchMobile() {
   }
 
   const handleFilterClick = () => {
-    console.log('Filter clicked')
+    navigate('/search/filter')
   }
 
   const handleBack = () => {
     navigate('/')
   }
 
+  const handleResetFilters = () => {
+    localStorage.removeItem('selectedCategories')
+    localStorage.removeItem('selectedAreas')
+    setActiveFilters({ categories: [], areas: [] })
+  }
+
   return (
     <Container>
-      <InfoSection>
-        <UserInfo>
+      {/* Header Section */}
+      <S.InfoSection>
+        <S.UserInfo>
           <div>
-            <HeaderContainer>
-              <BackButton onClick={handleBack}>
+            <S.HeaderContainer>
+              <S.BackButton onClick={handleBack}>
                 <BiArrowBack size={24} />
-              </BackButton>
-              <Title>Search</Title>
-            </HeaderContainer>
-            <Subtitle>Let's get cooking</Subtitle>
+              </S.BackButton>
+              <S.Title>Search</S.Title>
+            </S.HeaderContainer>
+            <S.Subtitle>Let's get cooking</S.Subtitle>
           </div>
-          <FilterButton onClick={handleFilterClick}>
+          <S.FilterButton onClick={handleFilterClick}>
             <FiFilter size={24} />
-          </FilterButton>
-        </UserInfo>
-      </InfoSection>
+          </S.FilterButton>
+        </S.UserInfo>
+      </S.InfoSection>
 
-      <SearchBarContainer isSearchPage onClick={handleContainerClick}>
-        <SearchInput isSearchPage>
+      {/* Search Input Section */}
+      <Shared.SearchBarContainer isSearchPage onClick={handleContainerClick}>
+        <Shared.SearchInput isSearchPage>
           <input
             ref={inputRef}
             type="text"
             placeholder="Search recipes..."
             autoFocus
           />
-        </SearchInput>
-      </SearchBarContainer>
+        </Shared.SearchInput>
+      </Shared.SearchBarContainer>
+
+      {/* Active Filters Section */}
+      {(activeFilters.categories.length > 0 ||
+        activeFilters.areas.length > 0) && (
+        <S.ActiveFiltersBar>
+          <S.FilterList>
+            {[...activeFilters.categories, ...activeFilters.areas]
+              .slice(0, 4)
+              .join(', ')}
+            {activeFilters.categories.length + activeFilters.areas.length > 4 &&
+              '...'}
+          </S.FilterList>
+          <S.ResetFiltersButton onClick={handleResetFilters}>
+            <RiFilterOffLine size={14} />
+            Reset
+          </S.ResetFiltersButton>
+        </S.ActiveFiltersBar>
+      )}
     </Container>
   )
 }

@@ -22,22 +22,44 @@ app.use(express.json())
 const MEALDB_BASE_URL = 'https://www.themealdb.com/api/json/v1/1'
 
 // Search endpoint
-// Used to search for recipes by query
+// Used to search for recipes by query, uses filters
 app.get('/api/search', async (req, res) => {
   try {
-    const { term } = req.query
-    const response = await axios.get(`${MEALDB_BASE_URL}/search.php?s=${term}`)
+    const { term, categories, areas } = req.query
+    let results = []
 
-    const simplifiedMeals =
-      response.data.meals?.map((meal) => ({
-        id: meal.idMeal,
-        title: meal.strMeal,
-        category: meal.strCategory,
-        area: meal.strArea,
-        image: meal.strMealThumb,
-      })) || []
+    // Star with search term
+    if (term) {
+      const response = await axios.get(
+        `${MEALDB_BASE_URL}/search.php?s=${term}`,
+      )
+      results = response.data.meals || []
+    }
 
-    res.json(simplifiedMeals)
+    // Apply category filters if present
+    if (categories) {
+      const categoryList = categories.split(',')
+      results = results.filter((meal) =>
+        categoryList.includes(meal.strCategory),
+      )
+    }
+
+    // Apply area filters if present
+    if (areas) {
+      const areaList = areas.split(',')
+      results = results.filter((meal) => areaList.includes(meal.strArea))
+    }
+
+    // Return simplified results
+    const simplifiedResults = results.map((meal) => ({
+      id: meal.idMeal,
+      title: meal.strMeal,
+      category: meal.strCategory,
+      area: meal.strArea,
+      image: meal.strMealThumb,
+    }))
+
+    res.json(simplifiedResults)
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch recipes' })
   }

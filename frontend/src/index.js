@@ -10,6 +10,7 @@ import OnboardingMobile from './Onboarding/onboardingMobile'
 import HomeMobile from './Home/homeMobile'
 import SearchMobile from './Search/searchMobile'
 import SettingsMobile from './Settings/settingsMobile'
+import FilterMobile from './Search/filterMobile'
 
 // Desktop Components
 import HomeWeb from './Home/homeWeb'
@@ -103,6 +104,14 @@ function App() {
           element={
             <ProtectedRoute>
               <ResponsiveComponent Mobile={SearchMobile} Desktop={SearchWeb} />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/search/filter"
+          element={
+            <ProtectedRoute>
+              <ResponsiveComponent Mobile={FilterMobile} Desktop={SearchWeb} />
             </ProtectedRoute>
           }
         />

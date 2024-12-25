@@ -44,7 +44,7 @@ const CHEF_NAMES = [
   'Chef Michael Wong',
 ]
 
-const MEAL_EMOJIS = ['🔥', '��', '⭐', '💯', '✨', '🌟']
+const MEAL_EMOJIS = ['🔥', '⭐', '💯', '✨', '🌟']
 
 function HomeMobile() {
   // Navigation
