@@ -3,6 +3,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import './index.css'
+import styled from 'styled-components'
 
 // Mobile Components
 import OnboardingMobile from './Onboarding/onboardingMobile'
@@ -35,10 +36,39 @@ const ProtectedRoute = ({ children }) => {
   return children
 }
 
+// Styled components for mobile layout, forcing mobile view for desktop viewing
+const MobileWrapper = styled.div`
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 20px 0;
+  background: #f5f5f5;
+`
+
+const MobileContainer = styled.div`
+  width: 430px;
+  min-height: calc(100vh - 40px);
+  background: white;
+  padding: 0 10px;
+  border-radius: 32px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+`
+
 // Component selector based on mobile preference
 const ResponsiveComponent = ({ Mobile, Desktop }) => {
   const isMobile = localStorage.getItem('isMobile') === 'true'
-  return isMobile ? <Mobile /> : <Desktop />
+  return isMobile ? (
+    <MobileWrapper>
+      <MobileContainer>
+        <Mobile />
+      </MobileContainer>
+    </MobileWrapper>
+  ) : (
+    <Desktop />
+  )
 }
 
 function App() {
@@ -49,7 +79,16 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/onboarding" element={<OnboardingMobile />} />
+        <Route
+          path="/onboarding"
+          element={
+            <MobileWrapper>
+              <MobileContainer>
+                <OnboardingMobile />
+              </MobileContainer>
+            </MobileWrapper>
+          }
+        />
         <Route
           path="/"
           element={
