@@ -65,6 +65,10 @@ export const SearchIcon = styled.div`
   color: #29942e;
   display: flex;
   align-items: center;
+  opacity: ${(props) => (props.isSearchPage ? 0 : 1)};
+  transition: opacity 0.2s ease;
+  width: ${(props) => (props.isSearchPage ? 0 : 'auto')};
+  margin-right: ${(props) => (props.isSearchPage ? 0 : '12px')};
 `
 
 export const SearchOverlay = styled.div`
@@ -74,4 +78,26 @@ export const SearchOverlay = styled.div`
   right: 0;
   bottom: 0;
   z-index: 1;
+`
+
+export const SearchButton = styled.button`
+  background: none;
+  border: none;
+  color: #29942e;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: ${(props) => (props.visible ? 1 : 0)};
+  transition: all 0.2s ease;
+  pointer-events: ${(props) => (props.visible ? 'auto' : 'none')};
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
 `

@@ -11,6 +11,7 @@ export const HeaderSection = styled.div`
   padding: 24px;
   display: flex;
   align-items: center;
+  margin-top: 20px;
   gap: 16px;
 `
 
