@@ -116,10 +116,38 @@ function HomeMobile() {
     fetchCategories()
   }, [])
 
-  // Load initial meals
+  // Handle Category Select
+  const handleCategorySelect = React.useCallback(async (category) => {
+    setSelectedCategory(category)
+    setLoading(true)
+
+    try {
+      const categoryToFetch =
+        category === 'For You'
+          ? localStorage.getItem('favoriteCategory')
+          : category
+
+      const response = await fetch(
+        `http://localhost:5000/api/filter?category=${categoryToFetch}`,
+      )
+      const data = await response.json()
+      const mockedMeals = addMockData(data)
+
+      const mealsToShow =
+        category === 'For You' ? mockedMeals.slice(-2) : mockedMeals.slice(0, 2)
+
+      setMeals(mealsToShow)
+    } catch (error) {
+      console.error('Failed to fetch meals:', error)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  // Update the initial load useEffect
   useEffect(() => {
     handleCategorySelect('For You')
-  }, [])
+  }, [handleCategorySelect])
 
   // Navigate to search page (search bar)
   const handleSearchClick = () => {
@@ -137,36 +165,6 @@ function HomeMobile() {
       rating: (Math.random() * 2 + 3).toFixed(1), // Random rating between 3.0-5.0
       time: `${Math.floor(Math.random() * 30 + 10)} Mins`, // Random time between 10-40 mins
     }))
-  }
-
-  // Update data based on category
-  const handleCategorySelect = async (category) => {
-    setSelectedCategory(category)
-    setLoading(true)
-
-    try {
-      // If "For You" is selected, use the user's favorite category
-      const categoryToFetch =
-        category === 'For You'
-          ? localStorage.getItem('favoriteCategory')
-          : category
-
-      const response = await fetch(
-        `http://localhost:5000/api/filter?category=${categoryToFetch}`,
-      )
-      const data = await response.json()
-      const mockedMeals = addMockData(data)
-
-      // Show last 2 meals for "For You", first 2 for specific categories
-      const mealsToShow =
-        category === 'For You' ? mockedMeals.slice(-2) : mockedMeals.slice(0, 2)
-
-      setMeals(mealsToShow)
-    } catch (error) {
-      console.error('Failed to fetch meals:', error)
-    } finally {
-      setLoading(false)
-    }
   }
 
   // Chef Name (mock data)

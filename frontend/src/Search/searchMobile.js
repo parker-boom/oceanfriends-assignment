@@ -1,14 +1,20 @@
+// Libraries
 import React, { useEffect, useRef, useState } from 'react'
 import { BiSearch, BiArrowBack } from 'react-icons/bi'
 import { FiFilter } from 'react-icons/fi'
 import { MdArrowForward } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
+
+// Styles
 import { Container } from '../Home/home.styles'
 import * as Shared from '../shared/searchBar.styles'
 import * as S from './search.styles'
+
+// Icons
 import { RiFilterOffLine } from 'react-icons/ri'
 import { AiFillStar } from 'react-icons/ai'
 
+// Mock data for chefs
 const CHEF_NAMES = [
   'Chef Isabella Chen',
   'Chef Marcus Thompson',
@@ -46,13 +52,13 @@ function SearchMobile() {
     })
   }, [])
 
-  // Move these functions outside the component since they don't need component state
+  // Generate random rating and chef name
   const generateRating = () => (Math.random() * 1.3 + 3.6).toFixed(1)
   const getRandomChef = () =>
     CHEF_NAMES[Math.floor(Math.random() * CHEF_NAMES.length)]
 
-  // Modify handleSearch to generate metadata when results are fetched
-  const handleSearch = async () => {
+  // Handle Search
+  const handleSearch = React.useCallback(async () => {
     if (!searchTerm.trim()) return
 
     setIsLoading(true)
@@ -70,7 +76,6 @@ function SearchMobile() {
       const data = await response.json()
       const limitedResults = data.slice(0, 8)
 
-      // Generate metadata for new results
       const newMetadata = limitedResults.reduce(
         (acc, result) => ({
           ...acc,
@@ -89,23 +94,26 @@ function SearchMobile() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [searchTerm, activeFilters])
 
+  // Handle Key Press
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       handleSearch()
     }
   }
 
-  // Trigger search when filters change
+  // useEffect with handleSearch
   useEffect(() => {
     handleSearch()
-  }, [activeFilters])
+  }, [handleSearch])
 
+  // Focus on input
   useEffect(() => {
     inputRef.current?.focus()
   }, [])
 
+  // Handle Container Click
   const handleContainerClick = (e) => {
     // Ensure click propagates to input
     if (e.target !== inputRef.current) {
@@ -113,14 +121,17 @@ function SearchMobile() {
     }
   }
 
+  // Handle Filter Click
   const handleFilterClick = () => {
     navigate('/search/filter')
   }
 
+  // Handle Back to Home
   const handleBack = () => {
     navigate('/')
   }
 
+  // Handle Reset Filters
   const handleResetFilters = () => {
     localStorage.removeItem('selectedCategories')
     localStorage.removeItem('selectedAreas')
@@ -171,9 +182,9 @@ function SearchMobile() {
         </Shared.SearchInput>
       </Shared.SearchBarContainer>
 
+      {/* Active Filters Section */}
       {!isLoading && results.length > 0 && (
         <>
-          {/* Active Filters Section */}
           {(activeFilters.categories.length > 0 ||
             activeFilters.areas.length > 0) && (
             <S.ActiveFiltersBar>
