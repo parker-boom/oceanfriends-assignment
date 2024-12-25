@@ -42,7 +42,8 @@ const MobileWrapper = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 20px 0;
+  padding-bottom: 20px;
+  padding-top: 20px;
   background: #f5f5f5;
 `
 
@@ -50,11 +51,11 @@ const MobileContainer = styled.div`
   width: 430px;
   min-height: calc(100vh - 40px);
   background: white;
-  padding: 0 10px;
   border-radius: 32px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  display: flex;
 `
 
 // Component selector based on mobile preference
