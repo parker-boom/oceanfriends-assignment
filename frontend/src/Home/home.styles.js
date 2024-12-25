@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { AiFillStar } from 'react-icons/ai'
+import { staggeredFadeIn, fadeInUp } from '../shared/animations.styles'
 
 export const Container = styled.div`
   display: flex;
@@ -11,6 +12,7 @@ export const Container = styled.div`
 `
 
 export const InfoSection = styled.div`
+  ${staggeredFadeIn(0.1)}
   min-height: 15vh;
   padding: 24px;
   background: #ffffff;
@@ -61,12 +63,14 @@ export const SearchSection = styled.div`
 `
 
 export const CategorySection = styled.div`
-  min-height: 25vh;
+  ${staggeredFadeIn(0.3)}
+  min-height: 300px;
   padding: 5px 24px;
   background: #ffffff;
 `
 
 export const AreaSection = styled.div`
+  ${staggeredFadeIn(0.4)}
   min-height: 20vh;
   padding: 24px 24px 35px;
   background: #ffffff;
@@ -320,6 +324,7 @@ export const MealGrid = styled.div`
   gap: 16px;
   padding: 16px 0;
   height: 220px;
+  animation: ${fadeInUp} 0.3s ease forwards;
 `
 
 export const MealCard = styled.div`
@@ -383,4 +388,13 @@ export const Time = styled.span`
   display: flex;
   align-items: center;
   gap: 4px;
+`
+
+export const LoadingPlaceholder = styled.div`
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: ${(props) => (props.loading ? 0.7 : 1)};
+  transition: opacity 0.3s ease;
 `

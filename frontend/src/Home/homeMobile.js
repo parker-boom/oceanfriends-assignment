@@ -1,44 +1,18 @@
+// Libraries
 import React, { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { BiSearch } from 'react-icons/bi'
 import { AiFillHeart, AiFillStar } from 'react-icons/ai'
 import { MdChevronRight } from 'react-icons/md'
+
+// Styles
+import * as H from './home.styles'
 import {
-  Container,
-  InfoSection,
-  SearchSection,
-  CategorySection,
-  AreaSection,
-  UserInfo,
-  Greeting,
-  Question,
-  ProfilePic,
-  SearchBarButton,
+  SearchBarContainer,
+  SearchInput,
   SearchIcon,
-  SearchPlaceholder,
-  CategoryScroll,
-  CategoryButton,
-  HeartIcon,
-  LoadingIndicator,
-  MealGrid,
-  MealCard,
-  MealImage,
-  MealInfo,
-  MealTitle,
-  MealMetadata,
-  Rating,
-  Time,
-  AreaTitle,
-  AreaCard,
-  ChefImage,
-  AreaContent,
-  AreaMealTitle,
-  ChefName,
-  AreaMetadata,
-  ChevronIcon,
-  MainAreaCard,
-  SeeMoreButton,
-} from './home.styles'
+  SearchOverlay,
+} from '../shared/searchBar.styles'
 
 // Profile Picture Imports
 import pfp1 from '../Assets/pfpImages/pfp1.png'
@@ -47,7 +21,7 @@ import pfp3 from '../Assets/pfpImages/pfp3.png'
 import pfp4 from '../Assets/pfpImages/pfp4.png'
 import pfp5 from '../Assets/pfpImages/pfp5.png'
 
-// More explicit mapping
+// Profile Picture Mapping
 const pfpMap = {
   pfp1: pfp1,
   pfp2: pfp2,
@@ -56,8 +30,7 @@ const pfpMap = {
   pfp5: pfp5,
 }
 
-const AREA_TITLES = ['🔥 Hot in Your Collection ']
-
+// Chef Names (mock data)
 const CHEF_NAMES = [
   'Chef Isabella Chen',
   'Chef Marcus Thompson',
@@ -71,18 +44,27 @@ const CHEF_NAMES = [
   'Chef Michael Wong',
 ]
 
-const MEAL_EMOJIS = ['🔥', '💫', '⭐', '💯', '✨', '🌟']
+const MEAL_EMOJIS = ['🔥', '��', '⭐', '💯', '✨', '🌟']
 
 function HomeMobile() {
+  // Navigation
   const navigate = useNavigate()
+
+  // Random Question
   const [randomQuestion, setRandomQuestion] = useState('')
+
+  // User Name and Profile Picture
   const userName = localStorage.getItem('userName')
   const userPfp = localStorage.getItem('userPfp')
   console.log('Current userPfp:', userPfp)
   console.log('Available pfp:', pfpMap[userPfp])
+
+  // Categories
   const [categories, setCategories] = useState([])
   const [selectedCategory, setSelectedCategory] = useState('For You')
   const favoriteCategory = localStorage.getItem('favoriteCategory')
+
+  // Meals
   const [meals, setMeals] = useState([])
   const [loading, setLoading] = useState(false)
   const [areaMeal, setAreaMeal] = useState(null)
@@ -139,10 +121,12 @@ function HomeMobile() {
     handleCategorySelect('For You')
   }, [])
 
+  // Navigate to search page (search bar)
   const handleSearchClick = () => {
     navigate('/search')
   }
 
+  // Navigate to settings page (profile picture)
   const handleProfileClick = () => {
     navigate('/settings')
   }
@@ -155,6 +139,7 @@ function HomeMobile() {
     }))
   }
 
+  // Update data based on category
   const handleCategorySelect = async (category) => {
     setSelectedCategory(category)
     setLoading(true)
@@ -184,19 +169,17 @@ function HomeMobile() {
     }
   }
 
-  const [areaTitle] = useState(
-    () => AREA_TITLES[Math.floor(Math.random() * AREA_TITLES.length)],
-  )
-
+  // Chef Name (mock data)
   const [chefName] = useState(
     () => CHEF_NAMES[Math.floor(Math.random() * CHEF_NAMES.length)],
   )
 
+  // Meal Emoji
   const [mealEmoji] = useState(
     () => MEAL_EMOJIS[Math.floor(Math.random() * MEAL_EMOJIS.length)],
   )
 
-  // Add this new effect to fetch area meal
+  // Fetch area meal
   useEffect(() => {
     const fetchAreaMeal = async () => {
       try {
@@ -206,14 +189,13 @@ function HomeMobile() {
         )
         const data = await response.json()
 
-        // Randomly select one meal
         const randomIndex = Math.floor(Math.random() * data.length)
         const selectedMeal = data[randomIndex]
 
-        // Add mock rating and time
+        // Mock rating for area meal
         const mealWithMockData = {
           ...selectedMeal,
-          rating: (Math.random() * 2 + 3).toFixed(1),
+          rating: (Math.random() * 0.4 + 4.5).toFixed(1), // Random between 4.5-4.9 (popular meal)
           time: `${Math.floor(Math.random() * 30 + 10)} Mins`,
         }
 
@@ -226,15 +208,33 @@ function HomeMobile() {
     fetchAreaMeal()
   }, [])
 
+  // Add loading state for initial page load
+  const [pageLoading, setPageLoading] = useState(true)
+
+  useEffect(() => {
+    // Simulate minimum loading time for smooth animation
+    const timer = setTimeout(() => {
+      setPageLoading(false)
+    }, 300)
+
+    return () => clearTimeout(timer)
+  }, [])
+
+  // Update the loading check in render
+  if (pageLoading) {
+    return null // Or a loading skeleton if you prefer
+  }
+
   return (
-    <Container>
-      <InfoSection>
-        <UserInfo>
+    <H.Container>
+      {/* Info Section with Name, Subtitle, and Settings (PFP) */}
+      <H.InfoSection>
+        <H.UserInfo>
           <div>
-            <Greeting>Hello {userName}!</Greeting>
-            <Question>{randomQuestion}</Question>
+            <H.Greeting>Hello {userName}!</H.Greeting>
+            <H.Question>{randomQuestion}</H.Question>
           </div>
-          <ProfilePic
+          <H.ProfilePic
             src={pfpMap[userPfp]}
             alt="Profile"
             onClick={handleProfileClick}
@@ -243,91 +243,102 @@ function HomeMobile() {
               e.target.onerror = null
             }}
           />
-        </UserInfo>
-      </InfoSection>
+        </H.UserInfo>
+      </H.InfoSection>
 
-      <SearchSection>
-        <SearchBarButton onClick={handleSearchClick}>
+      {/* Search Bar (opens search page with transition)*/}
+      <SearchBarContainer>
+        <SearchInput>
           <SearchIcon>
             <BiSearch size={20} />
           </SearchIcon>
-          <SearchPlaceholder>Search recipes...</SearchPlaceholder>
-        </SearchBarButton>
-      </SearchSection>
+          <input
+            placeholder="Search recipes..."
+            disabled
+            style={{ cursor: 'pointer' }}
+          />
+          <SearchOverlay onClick={handleSearchClick} />
+        </SearchInput>
+      </SearchBarContainer>
 
-      <CategorySection>
-        <CategoryScroll>
+      {/* Category Section (displays meals based on category) */}
+      <H.CategorySection>
+        <H.CategoryScroll>
           {categories.map((category) => (
-            <CategoryButton
+            <H.CategoryButton
               key={category}
               active={selectedCategory === category}
               onClick={() => handleCategorySelect(category)}
             >
               {category}
               {category === 'For You' && (
-                <HeartIcon active={selectedCategory === category}>
+                <H.HeartIcon active={selectedCategory === category}>
                   <AiFillStar size={14} />
-                </HeartIcon>
+                </H.HeartIcon>
               )}
               {category === favoriteCategory && category !== 'For You' && (
-                <HeartIcon active={selectedCategory === category}>
+                <H.HeartIcon active={selectedCategory === category}>
                   <AiFillHeart size={14} />
-                </HeartIcon>
+                </H.HeartIcon>
               )}
-            </CategoryButton>
+            </H.CategoryButton>
           ))}
-        </CategoryScroll>
+        </H.CategoryScroll>
 
         {loading ? (
-          <LoadingIndicator>Loading...</LoadingIndicator>
+          <H.LoadingPlaceholder>
+            <H.LoadingIndicator>Loading...</H.LoadingIndicator>
+          </H.LoadingPlaceholder>
         ) : (
-          <MealGrid>
+          <H.MealGrid>
             {meals.slice(0, 2).map((meal) => (
-              <MealCard key={meal.idMeal}>
-                <MealImage src={meal.strMealThumb} alt={meal.strMeal} />
-                <MealInfo>
-                  <MealTitle>{meal.strMeal}</MealTitle>
-                  <MealMetadata>
-                    <Rating>⭐ {meal.rating}</Rating>
-                    <Time>⏱️ {meal.time}</Time>
-                  </MealMetadata>
-                </MealInfo>
-              </MealCard>
+              <H.MealCard key={meal.idMeal}>
+                <H.MealImage src={meal.strMealThumb} alt={meal.strMeal} />
+                <H.MealInfo>
+                  <H.MealTitle>{meal.strMeal}</H.MealTitle>
+                  <H.MealMetadata>
+                    <H.Rating>⭐ {meal.rating}</H.Rating>
+                    <H.Time>⏱️ {meal.time}</H.Time>
+                  </H.MealMetadata>
+                </H.MealInfo>
+              </H.MealCard>
             ))}
-          </MealGrid>
+          </H.MealGrid>
         )}
-      </CategorySection>
+      </H.CategorySection>
 
-      <AreaSection>
-        <AreaTitle>{areaTitle}</AreaTitle>
+      {/* Area Section (displays random favorite area meal) */}
+      <H.AreaSection>
+        <H.AreaTitle>{'🔥 Your Next Favorite Dish'}</H.AreaTitle>
         {areaMeal && (
-          <AreaContent>
-            <MainAreaCard>
-              <ChefImage>
+          <H.AreaContent>
+            <H.MainAreaCard>
+              <H.ChefImage>
                 <img src={areaMeal.strMealThumb} alt={areaMeal.strMeal} />
-              </ChefImage>
+              </H.ChefImage>
               <div>
-                <AreaMealTitle>
+                <H.AreaMealTitle>
                   <h3>{areaMeal.strMeal}</h3>
                   <span>{mealEmoji}</span>
-                </AreaMealTitle>
-                <ChefName>By {chefName}</ChefName>
-                <AreaMetadata>
-                  <Rating>⭐ {areaMeal.rating}</Rating>
-                  <Time>⏱️ {areaMeal.time}</Time>
-                </AreaMetadata>
+                </H.AreaMealTitle>
+                <H.ChefName>By {chefName}</H.ChefName>
+                <H.AreaMetadata>
+                  <H.Rating>⭐ {areaMeal.rating}</H.Rating>
+                  <H.Time>⏱️ {areaMeal.time}</H.Time>
+                </H.AreaMetadata>
               </div>
-            </MainAreaCard>
-            <SeeMoreButton>
+            </H.MainAreaCard>
+            <H.SeeMoreButton>
               <div>
                 <MdChevronRight size={24} />
               </div>
-            </SeeMoreButton>
-          </AreaContent>
+            </H.SeeMoreButton>
+          </H.AreaContent>
         )}
-      </AreaSection>
-    </Container>
+      </H.AreaSection>
+    </H.Container>
   )
 }
 
+// Used in index.js
 export default HomeMobile
