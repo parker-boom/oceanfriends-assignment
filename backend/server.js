@@ -6,8 +6,16 @@ require('dotenv').config()
 
 // Express
 const app = express()
-const port = process.env.PORT || 3001
-app.use(cors())
+const port = process.env.PORT || 5000
+
+// CORS
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST'],
+    credentials: true,
+  }),
+)
 app.use(express.json())
 
 // Define the base URL for the MealDB API
