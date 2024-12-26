@@ -1,70 +1,45 @@
-# Getting Started with Create React App
+# Recipeasy - Recipe Discovery App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A mobile-first recipe discovery application built with React, using TheMealDB API.
 
-## Available Scripts
+## Getting Started
 
-In the project directory, you can run:
+1. Clone repository
+2. Run `npm install`
+3. Run `npm start`
 
-### `npm start`
+The app will run on [http://localhost:3000](http://localhost:3000)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Using the App
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Core Features
 
-### `npm test`
+- Complete onboarding by setting your name, profile picture, and favorite cuisine preferences
+- Home page displays personalized recommendations based on your preferences
+- Search functionality with category and area filters
+- Settings page for updating preferences and switching between mobile/desktop views
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Navigation
 
-### `npm run build`
+- **Home**: View recommended recipes and trending meals
+- **Search**: Access via the search bar, use filters in top right
+- **Settings**: Click profile picture to access
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Implementation Notes
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- Real recipe data (images, titles) from TheMealDB API
+- Mock data for UX elements (chefs, ratings, cooking times)
+- Mobile-first design with desktop view option
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Current Limitations
 
-### `npm run eject`
+- Mock data points for meal metadata (ratings, chefs, times)
+- Search currently doesn't combine with filters
+- Meal detail pages not yet implemented
+- Desktop/mobile switching manual (would ideally be automatic based on screen size)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Tech Stack
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- React
+- Styled Components
+- Express Backend (API proxy)
