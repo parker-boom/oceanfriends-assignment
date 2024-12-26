@@ -204,29 +204,28 @@ function SearchMobile() {
       </Shared.SearchBarContainer>
 
       {/* Active Filters Section */}
-      {!isLoading && results.length > 0 && (
-        <>
-          {(activeFilters.categories.length > 0 ||
-            activeFilters.areas.length > 0) && (
-            <S.ActiveFiltersBar>
-              <S.FilterList>
-                {[...activeFilters.categories, ...activeFilters.areas]
-                  .slice(0, 4)
-                  .join(', ')}
-                {activeFilters.categories.length + activeFilters.areas.length >
-                  4 && '...'}
-              </S.FilterList>
-              <S.ResetFiltersButton onClick={handleResetFilters}>
-                <RiFilterOffLine size={14} />
-                Reset
-              </S.ResetFiltersButton>
-            </S.ActiveFiltersBar>
-          )}
+      {(activeFilters.categories.length > 0 ||
+        activeFilters.areas.length > 0) && (
+        <S.ActiveFiltersBar>
+          <S.FilterList>
+            {[...activeFilters.categories, ...activeFilters.areas]
+              .slice(0, 4)
+              .join(', ')}
+            {activeFilters.categories.length + activeFilters.areas.length > 4 &&
+              '...'}
+          </S.FilterList>
+          <S.ResetFiltersButton onClick={handleResetFilters}>
+            <RiFilterOffLine size={14} />
+            Reset
+          </S.ResetFiltersButton>
+        </S.ActiveFiltersBar>
+      )}
 
-          <S.ResultsHeader>
-            <S.ResultsCount>{results.length} recipes</S.ResultsCount>
-          </S.ResultsHeader>
-        </>
+      {/* Results Count */}
+      {!isLoading && results.length > 0 && (
+        <S.ResultsHeader>
+          <S.ResultsCount>{results.length} recipes</S.ResultsCount>
+        </S.ResultsHeader>
       )}
 
       {/* Results Section */}

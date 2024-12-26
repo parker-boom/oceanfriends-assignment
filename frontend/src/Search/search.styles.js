@@ -126,7 +126,7 @@ export const ResultsContainer = styled.div`
   padding: 5px 24px 24px 24px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  padding-bottom: 100px;
+  max-height: 500px;
 
   &::-webkit-scrollbar {
     display: none;
