@@ -88,9 +88,13 @@ app.get('/api/options', async (req, res) => {
       axios.get(`${MEALDB_BASE_URL}/list.php?a=list`),
     ])
 
+    // Format the response to match our frontend structure
+    const categories = categoriesRes.data.meals?.map((c) => c.strCategory) || []
+    const areas = areasRes.data.meals?.map((a) => a.strArea) || []
+
     res.json({
-      categories: categoriesRes.data.meals || [],
-      areas: areasRes.data.meals || [],
+      categories,
+      areas,
     })
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch options' })

@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { BiPencil } from 'react-icons/bi'
 import { IoMdSettings } from 'react-icons/io'
 import { MdExpandMore, MdClose } from 'react-icons/md'
 import { AiFillHeart } from 'react-icons/ai'
@@ -9,7 +8,6 @@ import { AiFillHeart } from 'react-icons/ai'
 import * as S from './settings.styles'
 
 // Assets
-import logo from '../Assets/logo512.png'
 import pfp1 from '../Assets/pfpImages/pfp1.png'
 import pfp2 from '../Assets/pfpImages/pfp2.png'
 import pfp3 from '../Assets/pfpImages/pfp3.png'
@@ -19,7 +17,6 @@ import pfp5 from '../Assets/pfpImages/pfp5.png'
 /**
  * Constants used throughout the settings interface.
  * pfpOptions provides the available profile pictures with their IDs.
- * categories and areas match the API's available options for user preferences.
  */
 const pfpOptions = [
   { id: 'pfp1', src: pfp1 },
@@ -27,54 +24,6 @@ const pfpOptions = [
   { id: 'pfp3', src: pfp3 },
   { id: 'pfp4', src: pfp4 },
   { id: 'pfp5', src: pfp5 },
-]
-
-const categories = [
-  'Beef',
-  'Breakfast',
-  'Chicken',
-  'Dessert',
-  'Goat',
-  'Lamb',
-  'Pasta',
-  'Pork',
-  'Seafood',
-  'Side',
-  'Starter',
-  'Vegan',
-  'Vegetarian',
-  'Misc.',
-]
-
-const areas = [
-  'American',
-  'British',
-  'Canadian',
-  'Chinese',
-  'Croatian',
-  'Dutch',
-  'Egyptian',
-  'Filipino',
-  'French',
-  'Greek',
-  'Indian',
-  'Irish',
-  'Italian',
-  'Jamaican',
-  'Japanese',
-  'Kenyan',
-  'Malaysian',
-  'Mexican',
-  'Moroccan',
-  'Polish',
-  'Portuguese',
-  'Russian',
-  'Spanish',
-  'Thai',
-  'Tunisian',
-  'Turkish',
-  'Ukrainian',
-  'Vietnamese',
 ]
 
 /**
@@ -89,6 +38,12 @@ const areas = [
  */
 function SettingsWeb() {
   const navigate = useNavigate()
+
+  // Get categories and areas from localStorage
+  const categories = JSON.parse(
+    localStorage.getItem('availableCategories') || '[]',
+  )
+  const areas = JSON.parse(localStorage.getItem('availableAreas') || '[]')
 
   // User-related state
   const [name, setName] = useState(localStorage.getItem('userName') || '')
@@ -106,7 +61,7 @@ function SettingsWeb() {
 
   // UI state
   const [openSection, setOpenSection] = useState('')
-  const [isEditing, setIsEditing] = useState(false)
+  const [setIsEditing] = useState(false)
   const [showModal, setShowModal] = useState(false)
 
   // Handler functions

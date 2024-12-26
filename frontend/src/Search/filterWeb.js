@@ -42,21 +42,23 @@ function FilterWeb({ onClose }) {
   }, [])
 
   /**
-   * Fetches available filter options from the API.
-   * Categories and areas are fetched together to minimize API calls.
+   * Loads available filter options from localStorage.
+   * Categories and areas are loaded from the centralized cache.
    */
   useEffect(() => {
-    const fetchFilters = async () => {
+    const loadFilters = () => {
       try {
-        const response = await fetch('http://localhost:5000/api/options')
-        const data = await response.json()
-        setCategories(data.categories.map((c) => c.strCategory))
-        setAreas(data.areas.map((a) => a.strArea))
+        const categories = JSON.parse(
+          localStorage.getItem('availableCategories') || '[]',
+        )
+        const areas = JSON.parse(localStorage.getItem('availableAreas') || '[]')
+        setCategories(categories)
+        setAreas(areas)
       } catch (error) {
-        console.error('Failed to fetch filters:', error)
+        console.error('Failed to load filters:', error)
       }
     }
-    fetchFilters()
+    loadFilters()
   }, [])
 
   // Handler functions

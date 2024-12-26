@@ -53,13 +53,25 @@ const MobileContainer = styled.div`
 /**
  * Initializes required localStorage values if not present.
  * Sets default mobile view and onboarding status.
+ * Also fetches and caches filter options from the API.
  */
-const initializeLocalStorage = () => {
+const initializeLocalStorage = async () => {
   if (!localStorage.getItem('isMobile')) {
     localStorage.setItem('isMobile', 'true')
   }
   if (!localStorage.getItem('onboardingComplete')) {
     localStorage.setItem('onboardingComplete', 'false')
+  }
+
+  // Fetch and cache filter options
+  try {
+    const response = await fetch('http://localhost:5000/api/options')
+    const data = await response.json()
+
+    localStorage.setItem('availableCategories', JSON.stringify(data.categories))
+    localStorage.setItem('availableAreas', JSON.stringify(data.areas))
+  } catch (error) {
+    console.error('Failed to fetch filter options:', error)
   }
 }
 

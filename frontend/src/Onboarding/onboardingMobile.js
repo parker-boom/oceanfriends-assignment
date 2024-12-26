@@ -19,9 +19,8 @@ import pfp4 from '../Assets/pfpImages/pfp4.png'
 import pfp5 from '../Assets/pfpImages/pfp5.png'
 
 /**
- * Constants used throughout the onboarding interface.
+ * Constants used throughout the settings interface.
  * pfpOptions provides the available profile pictures with their IDs.
- * categories and areas match the API's available options for user preferences.
  */
 const pfpOptions = [
   { id: 'pfp1', src: pfp1 },
@@ -31,66 +30,18 @@ const pfpOptions = [
   { id: 'pfp5', src: pfp5 },
 ]
 
-const categories = [
-  'Beef',
-  'Breakfast',
-  'Chicken',
-  'Dessert',
-  'Goat',
-  'Lamb',
-  'Pasta',
-  'Pork',
-  'Seafood',
-  'Side',
-  'Starter',
-  'Vegan',
-  'Vegetarian',
-  'Misc.',
-]
-
-const areas = [
-  'American',
-  'British',
-  'Canadian',
-  'Chinese',
-  'Croatian',
-  'Dutch',
-  'Egyptian',
-  'Filipino',
-  'French',
-  'Greek',
-  'Indian',
-  'Irish',
-  'Italian',
-  'Jamaican',
-  'Japanese',
-  'Kenyan',
-  'Malaysian',
-  'Mexican',
-  'Moroccan',
-  'Polish',
-  'Portuguese',
-  'Russian',
-  'Spanish',
-  'Thai',
-  'Tunisian',
-  'Turkish',
-  'Ukrainian',
-  'Vietnamese',
-].filter((area) => area !== 'Unknown')
-
 /**
- * OnboardingMobile - Three-step onboarding flow for new users.
- * Collects user information and preferences to personalize their experience.
- * Features:
- * - Welcome and app introduction
- * - Name and profile picture selection
- * - Food preferences (category and area)
- * - Progressive disclosure of options
- * - Persistent storage of user choices
+ * OnboardingMobile - Mobile version of the onboarding interface.
+ * Provides a step-by-step setup process for new users.
  */
 function OnboardingMobile() {
   const navigate = useNavigate()
+
+  // Get categories and areas from localStorage
+  const categories = JSON.parse(
+    localStorage.getItem('availableCategories') || '[]',
+  )
+  const areas = JSON.parse(localStorage.getItem('availableAreas') || '[]')
 
   // Navigation state
   const [currentSlide, setCurrentSlide] = useState(0)

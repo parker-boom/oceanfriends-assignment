@@ -87,16 +87,15 @@ function HomeWeb() {
   const [showTrendingComingSoon, setShowTrendingComingSoon] = useState(false)
 
   /**
-   * Fetches and organizes categories with user's favorite category prioritized.
+   * Loads and organizes categories with user's favorite category prioritized.
    * Orders categories as: "For You" -> User's Favorite -> All Other Categories
    */
   useEffect(() => {
-    const fetchCategories = async () => {
+    const loadCategories = () => {
       try {
-        const response = await fetch('http://localhost:5000/api/options')
-        const data = await response.json()
-        const allCategories = data.categories.map((cat) => cat.strCategory)
-
+        const allCategories = JSON.parse(
+          localStorage.getItem('availableCategories') || '[]',
+        )
         const favoriteCategory = localStorage.getItem('favoriteCategory')
         let orderedCategories = ['For You']
 
@@ -112,11 +111,11 @@ function HomeWeb() {
 
         setCategories(orderedCategories)
       } catch (error) {
-        console.error('Failed to fetch categories:', error)
+        console.error('Failed to load categories:', error)
       }
     }
 
-    fetchCategories()
+    loadCategories()
   }, [])
 
   /**
