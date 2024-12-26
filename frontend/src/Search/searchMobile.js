@@ -106,8 +106,10 @@ function SearchMobile() {
 
   // useEffect with handleSearch
   useEffect(() => {
-    handleSearch()
-  }, [handleSearch])
+    if (searchTerm.trim()) {
+      handleSearch()
+    }
+  }, [handleSearch, searchTerm, activeFilters])
 
   // Focus on input
   useEffect(() => {
@@ -138,6 +140,24 @@ function SearchMobile() {
     localStorage.removeItem('selectedAreas')
     setActiveFilters({ categories: [], areas: [] })
   }
+
+  // Load filters when returning from filter page
+  useEffect(() => {
+    const loadFilters = () => {
+      const savedCategories = JSON.parse(
+        localStorage.getItem('selectedCategories') || '[]',
+      )
+      const savedAreas = JSON.parse(
+        localStorage.getItem('selectedAreas') || '[]',
+      )
+      setActiveFilters({
+        categories: savedCategories,
+        areas: savedAreas,
+      })
+    }
+
+    loadFilters()
+  }, [])
 
   return (
     <Container>
