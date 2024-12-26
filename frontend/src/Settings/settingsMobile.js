@@ -1,17 +1,21 @@
+// Libraries
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { BiPencil } from 'react-icons/bi'
 import { IoMdSettings } from 'react-icons/io'
 import { MdExpandMore, MdClose } from 'react-icons/md'
 
+// Assets
 import pfp1 from '../Assets/pfpImages/pfp1.png'
 import pfp2 from '../Assets/pfpImages/pfp2.png'
 import pfp3 from '../Assets/pfpImages/pfp3.png'
 import pfp4 from '../Assets/pfpImages/pfp4.png'
 import pfp5 from '../Assets/pfpImages/pfp5.png'
 
+// Styles
 import * as S from './settings.styles'
 
+// Mapping for PFP
 const pfpOptions = [
   { id: 'pfp1', src: pfp1 },
   { id: 'pfp2', src: pfp2 },
@@ -20,6 +24,7 @@ const pfpOptions = [
   { id: 'pfp5', src: pfp5 },
 ]
 
+// Categories (matches API data)
 const categories = [
   'Beef',
   'Breakfast',
@@ -37,6 +42,7 @@ const categories = [
   'Misc.',
 ]
 
+// Areas (matches API data)
 const areas = [
   'American',
   'British',
@@ -69,9 +75,11 @@ const areas = [
 ]
 
 function SettingsMobile() {
+  // States
   const navigate = useNavigate()
   const [openSection, setOpenSection] = useState('')
   const [isEditing, setIsEditing] = useState(false)
+  const [showModal, setShowModal] = useState(false)
 
   const [name, setName] = useState(localStorage.getItem('userName') || '')
   const [selectedPfp, setSelectedPfp] = useState(
@@ -84,16 +92,19 @@ function SettingsMobile() {
     localStorage.getItem('favoriteArea') || '',
   )
 
+  // Updates when category is selected
   const handleCategorySelect = (category) => {
     setFavoriteCategory(category)
     setOpenSection('area')
   }
 
+  // Updates when area is selected
   const handleAreaSelect = (area) => {
     setFavoriteArea(area)
     setOpenSection('')
   }
 
+  // Saves changes (save clicked)
   const handleSave = () => {
     localStorage.setItem('userName', name)
     localStorage.setItem('userPfp', selectedPfp)
@@ -102,8 +113,15 @@ function SettingsMobile() {
     navigate('/')
   }
 
+  // Switches to desktop layout
+  const handleSwitchToDesktop = () => {
+    localStorage.setItem('isMobile', 'false')
+    window.location.reload()
+  }
+
   return (
     <S.Container>
+      {/* Header */}
       <S.Header>
         <div>
           <S.Title>Settings</S.Title>
@@ -115,6 +133,7 @@ function SettingsMobile() {
       </S.Header>
 
       <S.Content>
+        {/* Name & PFP */}
         <S.Section>
           <S.SectionTitle>Name</S.SectionTitle>
           <S.NameInput
@@ -148,6 +167,7 @@ function SettingsMobile() {
 
         <S.Divider />
 
+        {/* Favorites */}
         <S.FilterSection>
           <S.FilterHeader
             onClick={() =>
@@ -205,14 +225,36 @@ function SettingsMobile() {
         </S.FilterSection>
       </S.Content>
 
+      {/* Action Buttons */}
       <S.ButtonContainer>
-        <S.CancelButton onClick={() => navigate('/')}>
-          <MdClose size={24} />
-        </S.CancelButton>
-        <S.SaveButton onClick={handleSave}>Save Changes</S.SaveButton>
+        <S.ActionButtons>
+          <S.CancelButton onClick={() => navigate('/')}>
+            <MdClose size={24} />
+          </S.CancelButton>
+          <S.SaveButton onClick={handleSave}>Save Changes</S.SaveButton>
+        </S.ActionButtons>
+        <S.SwitchButton onClick={() => setShowModal(true)}>
+          Switch to desktop
+        </S.SwitchButton>
       </S.ButtonContainer>
+
+      {/* Popup for switching to desktop */}
+      {showModal && (
+        <S.ModalOverlay>
+          <S.Modal>
+            <S.ModalTitle>Switch to Desktop Layout?</S.ModalTitle>
+            <S.ModalButtons>
+              <S.ModalButton onClick={handleSwitchToDesktop}>Yes</S.ModalButton>
+              <S.ModalButton onClick={() => setShowModal(false)}>
+                No
+              </S.ModalButton>
+            </S.ModalButtons>
+          </S.Modal>
+        </S.ModalOverlay>
+      )}
     </S.Container>
   )
 }
 
+// Used in index.js
 export default SettingsMobile

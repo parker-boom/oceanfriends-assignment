@@ -185,8 +185,8 @@ export const FilterOption = styled.button`
 
 export const ButtonContainer = styled.div`
   display: flex;
-  gap: 16px;
-  padding: 24px;
+  flex-direction: column;
+  padding: 12px 24px;
   background: white;
   border-top: 1px solid #e0e0e0;
   position: fixed;
@@ -201,6 +201,12 @@ export const ButtonContainer = styled.div`
     transform: translateX(-50%);
     border-radius: 0 0 32px 32px;
   }
+`
+
+export const ActionButtons = styled.div`
+  display: flex;
+  gap: 16px;
+  margin-bottom: 5px;
 `
 
 export const SaveButton = styled.button`
@@ -234,5 +240,81 @@ export const CancelButton = styled.button`
 
   &:hover {
     background: #e0e0e0;
+  }
+`
+
+export const SwitchButton = styled.button`
+  background: none;
+  border: none;
+  color: #29942e;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 14px;
+  align-self: center;
+  margin-top: 8px;
+
+  &:hover {
+    opacity: 0.8;
+  }
+`
+
+export const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+`
+
+export const Modal = styled.div`
+  background: white;
+  padding: 24px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 300px;
+`
+
+export const ModalTitle = styled.h3`
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  text-align: center;
+`
+
+export const ModalButtons = styled.div`
+  display: flex;
+  gap: 16px;
+`
+
+export const ModalButton = styled.button`
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:first-child {
+    background: #29942e;
+    color: white;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
+  &:last-child {
+    background: #f5f5f5;
+    color: #666;
+
+    &:hover {
+      background: #e0e0e0;
+    }
   }
 `
