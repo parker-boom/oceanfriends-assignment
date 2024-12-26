@@ -1,9 +1,16 @@
+/**
+ * Application entry point that handles routing and responsive layout switching.
+ * Provides a consistent mobile container when viewing mobile layouts on desktop,
+ * and manages the transition between mobile/desktop views. Also handles route
+ * protection for onboarding flow.
+ */
+
 // Libraries
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import './index.css'
 import styled from 'styled-components'
+import './index.css'
 
 // Mobile Components
 import OnboardingMobile from './Onboarding/onboardingMobile'
@@ -17,27 +24,11 @@ import HomeWeb from './Home/homeWeb'
 import SearchWeb from './Search/searchWeb'
 import SettingsWeb from './Settings/settingsWeb'
 
-// Initialize local storage values if not present
-const initializeLocalStorage = () => {
-  if (!localStorage.getItem('isMobile')) {
-    localStorage.setItem('isMobile', 'true')
-  }
-  if (!localStorage.getItem('onboardingComplete')) {
-    localStorage.setItem('onboardingComplete', 'false')
-  }
-}
-
-// Route guard component to handle onboarding redirect
-const ProtectedRoute = ({ children }) => {
-  const onboardingComplete =
-    localStorage.getItem('onboardingComplete') === 'true'
-  if (!onboardingComplete) {
-    return <Navigate to="/onboarding" replace />
-  }
-  return children
-}
-
-// Styled components for mobile layout, forcing mobile view for desktop viewing
+/**
+ * Mobile layout wrapper components.
+ * These create a phone-like container when viewing mobile layouts on desktop,
+ * providing visual context and consistent width constraints.
+ */
 const MobileWrapper = styled.div`
   min-height: 100vh;
   display: flex;
@@ -59,7 +50,36 @@ const MobileContainer = styled.div`
   display: flex;
 `
 
-// Component selector based on mobile preference
+/**
+ * Initializes required localStorage values if not present.
+ * Sets default mobile view and onboarding status.
+ */
+const initializeLocalStorage = () => {
+  if (!localStorage.getItem('isMobile')) {
+    localStorage.setItem('isMobile', 'true')
+  }
+  if (!localStorage.getItem('onboardingComplete')) {
+    localStorage.setItem('onboardingComplete', 'false')
+  }
+}
+
+/**
+ * Route guard component that redirects to onboarding if not completed.
+ * Protects main app routes until onboarding flow is finished.
+ */
+const ProtectedRoute = ({ children }) => {
+  const onboardingComplete =
+    localStorage.getItem('onboardingComplete') === 'true'
+  if (!onboardingComplete) {
+    return <Navigate to="/onboarding" replace />
+  }
+  return children
+}
+
+/**
+ * Renders either mobile or desktop component based on user preference.
+ * Mobile components are wrapped in a phone-like container for desktop viewing.
+ */
 const ResponsiveComponent = ({ Mobile, Desktop }) => {
   const isMobile = localStorage.getItem('isMobile') === 'true'
   return isMobile ? (
@@ -81,6 +101,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Onboarding Route - Mobile Only */}
         <Route
           path="/onboarding"
           element={
@@ -91,6 +112,8 @@ function App() {
             </MobileWrapper>
           }
         />
+
+        {/* Protected Main Routes */}
         <Route
           path="/"
           element={
@@ -126,6 +149,8 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* Fallback Route */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

@@ -1,3 +1,11 @@
+/**
+ * Shared animation styles that create fluid transitions throughout the app.
+ * These animations help maintain visual continuity between different views
+ * and states. The staggered fade-in effect is particularly used to create
+ * a cohesive feel when moving between home and search layouts, ensuring
+ * elements enter the view in a natural, coordinated way.
+ */
+
 import { keyframes, css } from 'styled-components'
 
 // Fade in from bottom animation

@@ -28,7 +28,7 @@ app.get('/api/search', async (req, res) => {
     const { term, categories, areas } = req.query
     let results = []
 
-    // Star with search term
+    // Start with search term
     if (term) {
       const response = await axios.get(
         `${MEALDB_BASE_URL}/search.php?s=${term}`,

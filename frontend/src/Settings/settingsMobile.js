@@ -4,18 +4,24 @@ import { useNavigate } from 'react-router-dom'
 import { BiPencil } from 'react-icons/bi'
 import { IoMdSettings } from 'react-icons/io'
 import { MdExpandMore, MdClose } from 'react-icons/md'
+import { AiFillHeart } from 'react-icons/ai'
+
+// Styles
+import * as S from './settings.styles'
 
 // Assets
+import logo from '../Assets/logo512.png'
 import pfp1 from '../Assets/pfpImages/pfp1.png'
 import pfp2 from '../Assets/pfpImages/pfp2.png'
 import pfp3 from '../Assets/pfpImages/pfp3.png'
 import pfp4 from '../Assets/pfpImages/pfp4.png'
 import pfp5 from '../Assets/pfpImages/pfp5.png'
 
-// Styles
-import * as S from './settings.styles'
-
-// Mapping for PFP
+/**
+ * Constants used throughout the settings interface.
+ * pfpOptions provides the available profile pictures with their IDs.
+ * categories and areas match the API's available options for user preferences.
+ */
 const pfpOptions = [
   { id: 'pfp1', src: pfp1 },
   { id: 'pfp2', src: pfp2 },
@@ -24,7 +30,6 @@ const pfpOptions = [
   { id: 'pfp5', src: pfp5 },
 ]
 
-// Categories (matches API data)
 const categories = [
   'Beef',
   'Breakfast',
@@ -42,7 +47,6 @@ const categories = [
   'Misc.',
 ]
 
-// Areas (matches API data)
 const areas = [
   'American',
   'British',
@@ -74,17 +78,26 @@ const areas = [
   'Vietnamese',
 ]
 
+/**
+ * SettingsMobile - Mobile version of the settings interface.
+ * Provides a compact, touch-friendly layout optimized for smaller screens.
+ * Features:
+ * - One-handed name editing
+ * - Scrollable profile picture selection
+ * - Collapsible preference sections
+ * - Layout switching capability
+ * - Persistent storage of user choices
+ */
 function SettingsMobile() {
-  // States
   const navigate = useNavigate()
-  const [openSection, setOpenSection] = useState('')
-  const [isEditing, setIsEditing] = useState(false)
-  const [showModal, setShowModal] = useState(false)
 
+  // User-related state
   const [name, setName] = useState(localStorage.getItem('userName') || '')
   const [selectedPfp, setSelectedPfp] = useState(
     localStorage.getItem('userPfp') || 'pfp1',
   )
+
+  // Preferences state
   const [favoriteCategory, setFavoriteCategory] = useState(
     localStorage.getItem('favoriteCategory') || '',
   )
@@ -92,19 +105,26 @@ function SettingsMobile() {
     localStorage.getItem('favoriteArea') || '',
   )
 
-  // Updates when category is selected
+  // UI state
+  const [openSection, setOpenSection] = useState('')
+  const [isEditing, setIsEditing] = useState(false)
+  const [showModal, setShowModal] = useState(false)
+
+  // Handler functions
   const handleCategorySelect = (category) => {
     setFavoriteCategory(category)
     setOpenSection('area')
   }
 
-  // Updates when area is selected
   const handleAreaSelect = (area) => {
     setFavoriteArea(area)
     setOpenSection('')
   }
 
-  // Saves changes (save clicked)
+  /**
+   * Saves all user preferences to localStorage and returns to home.
+   * Handles name, profile picture, and favorite food preferences.
+   */
   const handleSave = () => {
     localStorage.setItem('userName', name)
     localStorage.setItem('userPfp', selectedPfp)
@@ -113,7 +133,10 @@ function SettingsMobile() {
     navigate('/')
   }
 
-  // Switches to desktop layout
+  /**
+   * Switches the application to desktop layout.
+   * Updates localStorage and triggers a page reload for the change.
+   */
   const handleSwitchToDesktop = () => {
     localStorage.setItem('isMobile', 'false')
     window.location.reload()

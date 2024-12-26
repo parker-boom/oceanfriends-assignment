@@ -14,7 +14,10 @@ import * as S from './search.styles'
 import { RiFilterOffLine } from 'react-icons/ri'
 import { AiFillStar } from 'react-icons/ai'
 
-// Mock data for chefs
+/**
+ * Constants used for recipe attribution.
+ * CHEF_NAMES provides a consistent set of chef names for recipe results.
+ */
 const CHEF_NAMES = [
   'Chef Isabella Chen',
   'Chef Marcus Thompson',
@@ -28,37 +31,41 @@ const CHEF_NAMES = [
   'Chef Michael Wong',
 ]
 
+/**
+ * SearchMobile - Mobile version of the recipe search interface.
+ * Provides search functionality with filtering options and real-time results.
+ * Features:
+ * - Auto-focused search input
+ * - Category and area filtering
+ * - Active filter display
+ * - Loading states and transitions
+ * - Limited results (8) optimized for mobile viewing
+ */
 function SearchMobile() {
   const navigate = useNavigate()
   const inputRef = useRef(null)
+
+  // Search-related state
   const [searchTerm, setSearchTerm] = useState('')
+  const [results, setResults] = useState([])
+  const [resultMetadata, setResultMetadata] = useState({})
+  const [isLoading, setIsLoading] = useState(false)
+
+  // Filter-related state
   const [activeFilters, setActiveFilters] = useState({
     categories: [],
     areas: [],
   })
-  const [results, setResults] = useState([])
-  const [resultMetadata, setResultMetadata] = useState({})
-  const [isLoading, setIsLoading] = useState(false)
+
+  // UI state
   const [showComingSoon, setShowComingSoon] = useState(false)
 
-  // Load filters on mount
-  useEffect(() => {
-    const savedCategories = JSON.parse(
-      localStorage.getItem('selectedCategories') || '[]',
-    )
-    const savedAreas = JSON.parse(localStorage.getItem('selectedAreas') || '[]')
-    setActiveFilters({
-      categories: savedCategories,
-      areas: savedAreas,
-    })
-  }, [])
-
-  // Generate random rating and chef name
+  // Helper functions
   const generateRating = () => (Math.random() * 1.3 + 3.6).toFixed(1)
   const getRandomChef = () =>
     CHEF_NAMES[Math.floor(Math.random() * CHEF_NAMES.length)]
 
-  // Handle Search
+  // Handler functions
   const handleSearch = React.useCallback(async () => {
     if (!searchTerm.trim()) return
 
@@ -97,51 +104,10 @@ function SearchMobile() {
     }
   }, [searchTerm, activeFilters])
 
-  // Handle Key Press
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      handleSearch()
-    }
-  }
-
-  // useEffect with handleSearch
-  useEffect(() => {
-    if (searchTerm.trim()) {
-      handleSearch()
-    }
-  }, [handleSearch, searchTerm, activeFilters])
-
-  // Focus on input
-  useEffect(() => {
-    inputRef.current?.focus()
-  }, [])
-
-  // Handle Container Click
-  const handleContainerClick = (e) => {
-    // Ensure click propagates to input
-    if (e.target !== inputRef.current) {
-      inputRef.current?.focus()
-    }
-  }
-
-  // Handle Filter Click
-  const handleFilterClick = () => {
-    navigate('/search/filter')
-  }
-
-  // Handle Back to Home
-  const handleBack = () => {
-    navigate('/')
-  }
-
-  // Handle Reset Filters
-  const handleResetFilters = () => {
-    localStorage.removeItem('selectedCategories')
-    localStorage.removeItem('selectedAreas')
-    setActiveFilters({ categories: [], areas: [] })
-  }
-
-  // Load filters when returning from filter page
+  /**
+   * Loads and applies saved filters from localStorage.
+   * Used both on initial mount and when returning from filter page.
+   */
   useEffect(() => {
     const loadFilters = () => {
       const savedCategories = JSON.parse(
@@ -158,6 +124,47 @@ function SearchMobile() {
 
     loadFilters()
   }, [])
+
+  // Focus input effect
+  useEffect(() => {
+    inputRef.current?.focus()
+  }, [])
+
+  /**
+   * Triggers search when either the search term or filters change.
+   * Results are limited to 8 items for mobile optimization.
+   */
+  useEffect(() => {
+    if (searchTerm.trim()) {
+      handleSearch()
+    }
+  }, [handleSearch, searchTerm, activeFilters])
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch()
+    }
+  }
+
+  const handleContainerClick = (e) => {
+    if (e.target !== inputRef.current) {
+      inputRef.current?.focus()
+    }
+  }
+
+  const handleFilterClick = () => {
+    navigate('/search/filter')
+  }
+
+  const handleBack = () => {
+    navigate('/')
+  }
+
+  const handleResetFilters = () => {
+    localStorage.removeItem('selectedCategories')
+    localStorage.removeItem('selectedAreas')
+    setActiveFilters({ categories: [], areas: [] })
+  }
 
   return (
     <Container>

@@ -1,3 +1,11 @@
+/**
+ * Shared search bar styles used across both home and search layouts.
+ * These styles ensure visual consistency and smooth transitions when
+ * navigating between views. The search bar adapts its appearance
+ * based on context while maintaining familiar interactive elements
+ * and animations for a seamless user experience.
+ */
+
 import styled from 'styled-components'
 import { staggeredFadeIn } from './animations.styles'
 

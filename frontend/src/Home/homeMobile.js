@@ -14,14 +14,18 @@ import {
   SearchOverlay,
 } from '../shared/searchBar.styles'
 
-// Profile Picture Imports
+// Assets
 import pfp1 from '../Assets/pfpImages/pfp1.png'
 import pfp2 from '../Assets/pfpImages/pfp2.png'
 import pfp3 from '../Assets/pfpImages/pfp3.png'
 import pfp4 from '../Assets/pfpImages/pfp4.png'
 import pfp5 from '../Assets/pfpImages/pfp5.png'
 
-// Profile Picture Mapping
+/**
+ * Constants used throughout the home interface.
+ * pfpMap maps profile picture IDs to their respective image assets.
+ * CHEF_NAMES and MEAL_EMOJIS provide consistent data for recipe attribution and highlighting.
+ */
 const pfpMap = {
   pfp1: pfp1,
   pfp2: pfp2,
@@ -30,7 +34,6 @@ const pfpMap = {
   pfp5: pfp5,
 }
 
-// Chef Names (mock data)
 const CHEF_NAMES = [
   'Chef Isabella Chen',
   'Chef Marcus Thompson',
@@ -46,29 +49,22 @@ const CHEF_NAMES = [
 
 const MEAL_EMOJIS = ['🔥', '⭐', '💯', '✨', '🌟']
 
+/**
+ * HomeMobile - Mobile version of the main landing page.
+ * Displays personalized content including favorite categories, featured meals, and area-specific recommendations.
+ * Features:
+ * - Dynamic welcome messages
+ * - Horizontal scrolling category selection
+ * - Featured meals based on user preferences
+ * - Area-specific meal recommendations
+ */
 function HomeMobile() {
-  // Navigation
   const navigate = useNavigate()
 
-  // Random Question
-  const [randomQuestion, setRandomQuestion] = useState('')
-
-  // User Name and Profile Picture
+  // User-related state
   const userName = localStorage.getItem('userName')
   const userPfp = localStorage.getItem('userPfp')
-  console.log('Current userPfp:', userPfp)
-  console.log('Available pfp:', pfpMap[userPfp])
-
-  // Categories
-  const [categories, setCategories] = useState([])
-  const [selectedCategory, setSelectedCategory] = useState('For You')
-  const favoriteCategory = localStorage.getItem('favoriteCategory')
-
-  // Meals
-  const [meals, setMeals] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [areaMeal, setAreaMeal] = useState(null)
-
+  const [randomQuestion, setRandomQuestion] = useState('')
   const questions = useMemo(
     () => [
       'What are you cooking today?',
@@ -80,12 +76,37 @@ function HomeMobile() {
     [],
   )
 
+  // Category-related state
+  const [categories, setCategories] = useState([])
+  const [selectedCategory, setSelectedCategory] = useState('For You')
+  const [meals, setMeals] = useState([])
+  const [loading, setLoading] = useState(false)
+  const favoriteCategory = localStorage.getItem('favoriteCategory')
+
+  // Area-related state
+  const [areaMeal, setAreaMeal] = useState(null)
+  const [chefName] = useState(
+    () => CHEF_NAMES[Math.floor(Math.random() * CHEF_NAMES.length)],
+  )
+  const [mealEmoji] = useState(
+    () => MEAL_EMOJIS[Math.floor(Math.random() * MEAL_EMOJIS.length)],
+  )
+
+  // UI state
+  const [pageLoading, setPageLoading] = useState(true)
+  const [showComingSoon, setShowComingSoon] = useState(false)
+  const [showTrendingComingSoon, setShowTrendingComingSoon] = useState(false)
+
+  // Random question effect
   useEffect(() => {
     const randomIndex = Math.floor(Math.random() * questions.length)
     setRandomQuestion(questions[randomIndex])
   }, [questions])
 
-  // Fetch categories
+  /**
+   * Fetches and organizes categories with user's favorite category prioritized.
+   * Orders categories as: "For You" -> User's Favorite -> All Other Categories
+   */
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -93,7 +114,6 @@ function HomeMobile() {
         const data = await response.json()
         const allCategories = data.categories.map((cat) => cat.strCategory)
 
-        // Reorder categories to put favorite after "For You"
         const favoriteCategory = localStorage.getItem('favoriteCategory')
         let orderedCategories = ['For You']
 
@@ -116,7 +136,10 @@ function HomeMobile() {
     fetchCategories()
   }, [])
 
-  // Handle Category Select
+  /**
+   * Handles category selection and meal fetching.
+   * "For You" category shows the last 2 meals, while other categories show first 2.
+   */
   const handleCategorySelect = React.useCallback(async (category) => {
     setSelectedCategory(category)
     setLoading(true)
@@ -144,40 +167,14 @@ function HomeMobile() {
     }
   }, [])
 
-  // Update the initial load useEffect
   useEffect(() => {
     handleCategorySelect('For You')
   }, [handleCategorySelect])
 
-  // Navigate to search page (search bar)
-  const handleSearchClick = () => {
-    navigate('/search')
-  }
-
-  // Navigate to settings page (profile picture)
-  const handleProfileClick = () => {
-    navigate('/settings')
-  }
-
-  const addMockData = (meals) => {
-    return meals.map((meal) => ({
-      ...meal,
-      rating: (Math.random() * 2 + 3).toFixed(1), // Random rating between 3.0-5.0
-      time: `${Math.floor(Math.random() * 30 + 10)} Mins`, // Random time between 10-40 mins
-    }))
-  }
-
-  // Chef Name (mock data)
-  const [chefName] = useState(
-    () => CHEF_NAMES[Math.floor(Math.random() * CHEF_NAMES.length)],
-  )
-
-  // Meal Emoji
-  const [mealEmoji] = useState(
-    () => MEAL_EMOJIS[Math.floor(Math.random() * MEAL_EMOJIS.length)],
-  )
-
-  // Fetch area meal
+  /**
+   * Fetches and displays a random meal from the user's favorite area.
+   * Adds enhanced metadata (rating between 4.5-4.9) to highlight its popularity.
+   */
   useEffect(() => {
     const fetchAreaMeal = async () => {
       try {
@@ -190,10 +187,9 @@ function HomeMobile() {
         const randomIndex = Math.floor(Math.random() * data.length)
         const selectedMeal = data[randomIndex]
 
-        // Mock rating for area meal
         const mealWithMockData = {
           ...selectedMeal,
-          rating: (Math.random() * 0.4 + 4.5).toFixed(1), // Random between 4.5-4.9 (popular meal)
+          rating: (Math.random() * 0.4 + 4.5).toFixed(1),
           time: `${Math.floor(Math.random() * 30 + 10)} Mins`,
         }
 
@@ -206,11 +202,8 @@ function HomeMobile() {
     fetchAreaMeal()
   }, [])
 
-  // Loading state for initial page load
-  const [pageLoading, setPageLoading] = useState(true)
-
+  // Page loading effect
   useEffect(() => {
-    // Simulate minimum loading time for smooth animation
     const timer = setTimeout(() => {
       setPageLoading(false)
     }, 300)
@@ -218,13 +211,25 @@ function HomeMobile() {
     return () => clearTimeout(timer)
   }, [])
 
-  // Modal for meal details coming soon
-  const [showComingSoon, setShowComingSoon] = useState(false)
+  // Handler functions
+  const handleSearchClick = () => {
+    navigate('/search')
+  }
 
-  // Modal for trending page coming soon
-  const [showTrendingComingSoon, setShowTrendingComingSoon] = useState(false)
+  const handleProfileClick = () => {
+    navigate('/settings')
+  }
 
-  // Update the loading check in render
+  // Helper functions
+  const addMockData = (meals) => {
+    return meals.map((meal) => ({
+      ...meal,
+      rating: (Math.random() * 2 + 3).toFixed(1),
+      time: `${Math.floor(Math.random() * 30 + 10)} Mins`,
+    }))
+  }
+
+  // Loading check
   if (pageLoading) {
     return null
   }
@@ -344,7 +349,7 @@ function HomeMobile() {
         )}
       </H.AreaSection>
 
-      {/* Modal Component */}
+      {/* Modal Component - Meal Details */}
       {showComingSoon && (
         <H.ModalOverlay>
           <H.ComingSoonModal>
@@ -359,6 +364,7 @@ function HomeMobile() {
         </H.ModalOverlay>
       )}
 
+      {/* Modal Component - Trending*/}
       {showTrendingComingSoon && (
         <H.ModalOverlay>
           <H.ComingSoonModal>

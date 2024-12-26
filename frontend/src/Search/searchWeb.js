@@ -1,3 +1,4 @@
+// Libraries
 import React, { useEffect, useRef, useState } from 'react'
 import { BiSearch } from 'react-icons/bi'
 import { FiFilter } from 'react-icons/fi'
@@ -20,7 +21,12 @@ import pfp3 from '../Assets/pfpImages/pfp3.png'
 import pfp4 from '../Assets/pfpImages/pfp4.png'
 import pfp5 from '../Assets/pfpImages/pfp5.png'
 
-// Mock data for chefs (reused from mobile)
+/**
+ * Mock data and constants used throughout the search interface.
+ * CHEF_NAMES provides a consistent set of chef names for recipe attribution.
+ * pfpMap maps profile picture IDs to their respective image assets.
+ */
+// Constants
 const CHEF_NAMES = [
   'Chef Isabella Chen',
   'Chef Marcus Thompson',
@@ -34,7 +40,6 @@ const CHEF_NAMES = [
   'Chef Michael Wong',
 ]
 
-// Profile Picture Mapping
 const pfpMap = {
   pfp1: pfp1,
   pfp2: pfp2,
@@ -43,21 +48,48 @@ const pfpMap = {
   pfp5: pfp5,
 }
 
+/**
+ * Helper functions for generating consistent mock data.
+ * Ratings are generated between 3.6-4.9 to simulate realistic recipe ratings.
+ */
+const generateRating = () => (Math.random() * 1.3 + 3.6).toFixed(1)
+const getRandomChef = () =>
+  CHEF_NAMES[Math.floor(Math.random() * CHEF_NAMES.length)]
+
+/**
+ * SearchWeb - Desktop version of the recipe search interface.
+ * Provides real-time search functionality with filtering options and a responsive grid layout.
+ * Features:
+ * - Live search with category and area filtering
+ * - Persistent filter state using localStorage
+ * - Cross-tab filter synchronization using storage events
+ * - Responsive grid layout optimized for desktop viewing
+ */
 function SearchWeb() {
   const navigate = useNavigate()
   const inputRef = useRef(null)
+  const userPfp = localStorage.getItem('userPfp')
+
+  // Search-related state
   const [searchTerm, setSearchTerm] = useState('')
+  const [results, setResults] = useState([])
+  const [resultMetadata, setResultMetadata] = useState({})
+  const [isLoading, setIsLoading] = useState(false)
+
+  // Filter-related state
   const [activeFilters, setActiveFilters] = useState({
     categories: [],
     areas: [],
   })
-  const [results, setResults] = useState([])
-  const [resultMetadata, setResultMetadata] = useState({})
-  const [isLoading, setIsLoading] = useState(false)
+
+  // UI state
   const [showComingSoon, setShowComingSoon] = useState(false)
   const [showFilter, setShowFilter] = useState(false)
 
-  // Load filters on mount AND when localStorage changes
+  /**
+   * Manages filter synchronization across browser tabs and initial load.
+   * Listens for changes to filter-related localStorage entries and updates state accordingly.
+   */
   useEffect(() => {
     const loadFilters = () => {
       const savedCategories = JSON.parse(
@@ -72,10 +104,8 @@ function SearchWeb() {
       })
     }
 
-    // Initial load
     loadFilters()
 
-    // Set up storage event listener
     const handleStorageChange = (e) => {
       if (e.key === 'selectedCategories' || e.key === 'selectedAreas') {
         loadFilters()
@@ -86,12 +116,22 @@ function SearchWeb() {
     return () => window.removeEventListener('storage', handleStorageChange)
   }, [])
 
-  // Generate random rating and chef name
-  const generateRating = () => (Math.random() * 1.3 + 3.6).toFixed(1)
-  const getRandomChef = () =>
-    CHEF_NAMES[Math.floor(Math.random() * CHEF_NAMES.length)]
+  // Focus input effect
+  useEffect(() => {
+    inputRef.current?.focus()
+  }, [])
 
-  // Handle Search
+  /**
+   * Triggers search when either the search term or filters change.
+   * Debounced internally by the handleSearch callback.
+   */
+  useEffect(() => {
+    if (searchTerm.trim()) {
+      handleSearch()
+    }
+  }, [handleSearch, searchTerm, activeFilters])
+
+  // Handler functions
   const handleSearch = React.useCallback(async () => {
     if (!searchTerm.trim()) return
 
@@ -108,9 +148,7 @@ function SearchWeb() {
 
       const response = await fetch(`http://localhost:5000/api/search?${params}`)
       const data = await response.json()
-      console.log('Search response:', data)
       const limitedResults = data.slice(0, 12) // Show more results on desktop
-      console.log('Limited results:', limitedResults)
 
       const newMetadata = limitedResults.reduce(
         (acc, result) => ({
@@ -122,7 +160,6 @@ function SearchWeb() {
         }),
         {},
       )
-      console.log('Result metadata:', newMetadata)
 
       setResults(limitedResults)
       setResultMetadata(newMetadata)
@@ -133,34 +170,22 @@ function SearchWeb() {
     }
   }, [searchTerm, activeFilters])
 
-  // Handle Key Press
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       handleSearch()
     }
   }
 
-  // useEffect with handleSearch - trigger search on mount and filter changes
-  useEffect(() => {
-    if (searchTerm.trim()) {
-      handleSearch()
-    }
-  }, [handleSearch, searchTerm, activeFilters])
-
-  // Focus on input
-  useEffect(() => {
-    inputRef.current?.focus()
-  }, [])
-
-  // Handle Filter Click
   const handleFilterClick = () => {
     setShowFilter(true)
   }
 
-  // Handle Filter Close
+  /**
+   * Handles filter modal closure and result updates.
+   * Reloads filters from localStorage and triggers a new search to reflect changes.
+   */
   const handleFilterClose = () => {
     setShowFilter(false)
-    // Load the latest filters
     const savedCategories = JSON.parse(
       localStorage.getItem('selectedCategories') || '[]',
     )
@@ -169,28 +194,22 @@ function SearchWeb() {
       categories: savedCategories,
       areas: savedAreas,
     })
-    // Trigger a new search with updated filters
     handleSearch()
   }
 
-  // Handle Back to Home
   const handleBack = () => {
     navigate('/')
   }
 
-  // Handle Reset Filters
   const handleResetFilters = () => {
     localStorage.removeItem('selectedCategories')
     localStorage.removeItem('selectedAreas')
     setActiveFilters({ categories: [], areas: [] })
   }
 
-  // Add profile click handler
   const handleProfileClick = () => {
     navigate('/settings')
   }
-
-  const userPfp = localStorage.getItem('userPfp')
 
   return (
     <>

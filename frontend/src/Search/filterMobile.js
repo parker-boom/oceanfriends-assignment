@@ -10,22 +10,36 @@ import { RiFilterOffLine } from 'react-icons/ri'
 // Styles
 import * as F from './filter.styles'
 
+/**
+ * FilterMobile - Mobile version of the recipe filter interface.
+ * Provides expandable sections for category and area selection with visual feedback.
+ * Features:
+ * - Accordion-style filter sections
+ * - Favorite options prioritized
+ * - Selected filter previews
+ * - Persistent filter storage
+ * - Back navigation integration
+ */
 function FilterMobile() {
-  // State
   const navigate = useNavigate()
 
-  // Area
-  const [selectedAreas, setSelectedAreas] = useState([])
+  // Category-related state
+  const [categories, setCategories] = useState([])
+  const [selectedCategories, setSelectedCategories] = useState([])
+  const favoriteCategory = localStorage.getItem('favoriteCategory')
+
+  // Area-related state
   const [areas, setAreas] = useState([])
+  const [selectedAreas, setSelectedAreas] = useState([])
   const favoriteArea = localStorage.getItem('favoriteArea')
 
-  // Category
+  // UI state
   const [openSection, setOpenSection] = useState('category')
-  const [categories, setCategories] = useState([])
-  const favoriteCategory = localStorage.getItem('favoriteCategory')
-  const [selectedCategories, setSelectedCategories] = useState([])
 
-  // Load saved filters on mount
+  /**
+   * Loads previously selected filters from localStorage.
+   * Ensures filter persistence across navigation and page reloads.
+   */
   useEffect(() => {
     const savedCategories = JSON.parse(
       localStorage.getItem('selectedCategories') || '[]',
@@ -35,7 +49,10 @@ function FilterMobile() {
     setSelectedAreas(savedAreas)
   }, [])
 
-  // Fetch filter options
+  /**
+   * Fetches available filter options from the API.
+   * Categories and areas are fetched together to minimize API calls.
+   */
   useEffect(() => {
     const fetchFilters = async () => {
       try {
@@ -50,7 +67,7 @@ function FilterMobile() {
     fetchFilters()
   }, [])
 
-  // Handle category selection
+  // Handler functions
   const handleCategorySelect = (category) => {
     setSelectedCategories((prev) =>
       prev.includes(category)
@@ -59,14 +76,12 @@ function FilterMobile() {
     )
   }
 
-  // Handle area selection
   const handleAreaSelect = (area) => {
     setSelectedAreas((prev) =>
       prev.includes(area) ? prev.filter((a) => a !== area) : [...prev, area],
     )
   }
 
-  // Reset all filters
   const handleResetAll = () => {
     setSelectedCategories([])
     setSelectedAreas([])
@@ -74,7 +89,6 @@ function FilterMobile() {
     localStorage.removeItem('selectedAreas')
   }
 
-  // Apply filters
   const handleApplyFilters = () => {
     localStorage.setItem(
       'selectedCategories',
@@ -84,7 +98,10 @@ function FilterMobile() {
     navigate('/search')
   }
 
-  // Helper to sort items with favorite first
+  /**
+   * Helper function to sort items with user's favorite option first.
+   * Used for both category and area lists to prioritize preferred options.
+   */
   const sortWithFavoriteFirst = (items, favorite) => {
     return items.sort((a, b) => {
       if (a === favorite) return -1

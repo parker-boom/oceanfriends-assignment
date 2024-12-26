@@ -18,91 +18,113 @@ import pfp3 from '../Assets/pfpImages/pfp3.png'
 import pfp4 from '../Assets/pfpImages/pfp4.png'
 import pfp5 from '../Assets/pfpImages/pfp5.png'
 
-// Onboarding view (mobile only)
+/**
+ * Constants used throughout the onboarding interface.
+ * pfpOptions provides the available profile pictures with their IDs.
+ * categories and areas match the API's available options for user preferences.
+ */
+const pfpOptions = [
+  { id: 'pfp1', src: pfp1 },
+  { id: 'pfp2', src: pfp2 },
+  { id: 'pfp3', src: pfp3 },
+  { id: 'pfp4', src: pfp4 },
+  { id: 'pfp5', src: pfp5 },
+]
+
+const categories = [
+  'Beef',
+  'Breakfast',
+  'Chicken',
+  'Dessert',
+  'Goat',
+  'Lamb',
+  'Pasta',
+  'Pork',
+  'Seafood',
+  'Side',
+  'Starter',
+  'Vegan',
+  'Vegetarian',
+  'Misc.',
+]
+
+const areas = [
+  'American',
+  'British',
+  'Canadian',
+  'Chinese',
+  'Croatian',
+  'Dutch',
+  'Egyptian',
+  'Filipino',
+  'French',
+  'Greek',
+  'Indian',
+  'Irish',
+  'Italian',
+  'Jamaican',
+  'Japanese',
+  'Kenyan',
+  'Malaysian',
+  'Mexican',
+  'Moroccan',
+  'Polish',
+  'Portuguese',
+  'Russian',
+  'Spanish',
+  'Thai',
+  'Tunisian',
+  'Turkish',
+  'Ukrainian',
+  'Vietnamese',
+].filter((area) => area !== 'Unknown')
+
+/**
+ * OnboardingMobile - Three-step onboarding flow for new users.
+ * Collects user information and preferences to personalize their experience.
+ * Features:
+ * - Welcome and app introduction
+ * - Name and profile picture selection
+ * - Food preferences (category and area)
+ * - Progressive disclosure of options
+ * - Persistent storage of user choices
+ */
 function OnboardingMobile() {
-  // States
-  const [currentSlide, setCurrentSlide] = useState(0)
   const navigate = useNavigate()
+
+  // Navigation state
+  const [currentSlide, setCurrentSlide] = useState(0)
+
+  // User-data state
   const [name, setName] = useState('')
   const [selectedPfp, setSelectedPfp] = useState('pfp1')
+
+  // Preferences state
   const [favoriteCategory, setFavoriteCategory] = useState('')
   const [favoriteArea, setFavoriteArea] = useState('')
+
+  // UI state
   const [openSection, setOpenSection] = useState('category')
 
-  // PFP options, match to source
-  const pfpOptions = [
-    { id: 'pfp1', src: pfp1 },
-    { id: 'pfp2', src: pfp2 },
-    { id: 'pfp3', src: pfp3 },
-    { id: 'pfp4', src: pfp4 },
-    { id: 'pfp5', src: pfp5 },
-  ]
-
-  // Categories (matches API call)
-  const categories = [
-    'Beef',
-    'Breakfast',
-    'Chicken',
-    'Dessert',
-    'Goat',
-    'Lamb',
-    'Pasta',
-    'Pork',
-    'Seafood',
-    'Side',
-    'Starter',
-    'Vegan',
-    'Vegetarian',
-    'Misc.',
-  ]
-
-  // Areas (matches API call)
-  const areas = [
-    'American',
-    'British',
-    'Canadian',
-    'Chinese',
-    'Croatian',
-    'Dutch',
-    'Egyptian',
-    'Filipino',
-    'French',
-    'Greek',
-    'Indian',
-    'Irish',
-    'Italian',
-    'Jamaican',
-    'Japanese',
-    'Kenyan',
-    'Malaysian',
-    'Mexican',
-    'Moroccan',
-    'Polish',
-    'Portuguese',
-    'Russian',
-    'Spanish',
-    'Thai',
-    'Tunisian',
-    'Turkish',
-    'Ukrainian',
-    'Vietnamese',
-  ].filter((area) => area !== 'Unknown')
-
-  // Handle category selection
+  // Handler functions
   const handleCategorySelect = (category) => {
     setFavoriteCategory(category)
     setOpenSection('area')
   }
 
-  // Handle area selection
   const handleAreaSelect = (area) => {
     setFavoriteArea(area)
     setOpenSection('')
   }
 
-  // Handle next button click
+  /**
+   * Handles progression through onboarding slides.
+   * Saves user data at appropriate steps:
+   * - Slide 1 -> 2: No data saved
+   * - Slide 2 -> 3: Saves name and profile picture
+   * - Slide 3 -> Home: Saves preferences and marks onboarding as complete
+   */
   const handleNext = () => {
-    // Final slide: save category & area
     if (currentSlide === 2) {
       localStorage.setItem('favoriteCategory', favoriteCategory)
       localStorage.setItem('favoriteArea', favoriteArea)
@@ -111,7 +133,6 @@ function OnboardingMobile() {
       return
     }
 
-    // Second slide: save name & pfp
     if (currentSlide === 1) {
       localStorage.setItem('userName', name)
       localStorage.setItem('userPfp', selectedPfp)
@@ -120,12 +141,16 @@ function OnboardingMobile() {
     setCurrentSlide((prev) => prev + 1)
   }
 
-  // Handle back button click
   const handleBack = () => {
     setCurrentSlide((prev) => prev - 1)
   }
 
-  // Render content based on current slide
+  /**
+   * Renders content based on current slide.
+   * Slide 0: Welcome and app introduction
+   * Slide 1: Name and profile picture selection
+   * Slide 2: Food preferences with progressive disclosure
+   */
   const renderContent = () => {
     switch (currentSlide) {
       // First slide: welcome & explanation

@@ -1,9 +1,11 @@
+// Libraries
 import React, { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { BiSearch } from 'react-icons/bi'
 import { AiFillHeart, AiFillStar } from 'react-icons/ai'
 import { MdChevronRight } from 'react-icons/md'
 
+// Styles
 import * as H from './home.styles'
 import {
   SearchBarContainer,
@@ -12,22 +14,19 @@ import {
   SearchOverlay,
 } from '../shared/searchBar.styles'
 
+// Assets
 import logo from '../Assets/logo512.png'
-
 import pfp1 from '../Assets/pfpImages/pfp1.png'
 import pfp2 from '../Assets/pfpImages/pfp2.png'
 import pfp3 from '../Assets/pfpImages/pfp3.png'
 import pfp4 from '../Assets/pfpImages/pfp4.png'
 import pfp5 from '../Assets/pfpImages/pfp5.png'
 
-const pfpMap = {
-  pfp1: pfp1,
-  pfp2: pfp2,
-  pfp3: pfp3,
-  pfp4: pfp4,
-  pfp5: pfp5,
-}
-
+/**
+ * Constants used throughout the home interface.
+ * CHEF_NAMES and MEAL_EMOJIS provide consistent data for recipe attribution and highlighting.
+ * pfpMap maps profile picture IDs to their respective image assets.
+ */
 const CHEF_NAMES = [
   'Chef Isabella Chen',
   'Chef Marcus Thompson',
@@ -41,22 +40,56 @@ const CHEF_NAMES = [
   'Chef Michael Wong',
 ]
 
+const pfpMap = {
+  pfp1: pfp1,
+  pfp2: pfp2,
+  pfp3: pfp3,
+  pfp4: pfp4,
+  pfp5: pfp5,
+}
+
 const MEAL_EMOJIS = ['🔥', '⭐', '💯', '✨', '🌟']
 
+/**
+ * HomeWeb - Desktop version of the main landing page.
+ * Displays personalized content in a layout optimized for larger screens.
+ * Features:
+ * - Fixed header with logo and profile
+ * - Categorized meal browsing
+ * - Featured meals based on user preferences
+ * - Area-specific recommendations
+ */
 function HomeWeb() {
   const navigate = useNavigate()
 
+  // User-related state
   const userName = localStorage.getItem('userName')
   const userPfp = localStorage.getItem('userPfp')
 
+  // Category-related state
   const [categories, setCategories] = useState([])
   const [selectedCategory, setSelectedCategory] = useState('For You')
-  const favoriteCategory = localStorage.getItem('favoriteCategory')
-
   const [meals, setMeals] = useState([])
   const [loading, setLoading] = useState(false)
-  const [areaMeal, setAreaMeal] = useState(null)
+  const favoriteCategory = localStorage.getItem('favoriteCategory')
 
+  // Area-related state
+  const [areaMeal, setAreaMeal] = useState(null)
+  const [chefName] = useState(
+    () => CHEF_NAMES[Math.floor(Math.random() * CHEF_NAMES.length)],
+  )
+  const [mealEmoji] = useState(
+    () => MEAL_EMOJIS[Math.floor(Math.random() * MEAL_EMOJIS.length)],
+  )
+
+  // UI state
+  const [showComingSoon, setShowComingSoon] = useState(false)
+  const [showTrendingComingSoon, setShowTrendingComingSoon] = useState(false)
+
+  /**
+   * Fetches and organizes categories with user's favorite category prioritized.
+   * Orders categories as: "For You" -> User's Favorite -> All Other Categories
+   */
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -86,6 +119,11 @@ function HomeWeb() {
     fetchCategories()
   }, [])
 
+  /**
+   * Handles category selection and meal fetching.
+   * "For You" category shows the last 4 meals, while other categories show first 4.
+   * Desktop shows more meals than mobile version.
+   */
   const handleCategorySelect = React.useCallback(async (category) => {
     setSelectedCategory(category)
     setLoading(true)
@@ -117,30 +155,10 @@ function HomeWeb() {
     handleCategorySelect('For You')
   }, [handleCategorySelect])
 
-  const handleSearchClick = () => {
-    navigate('/search')
-  }
-
-  const handleProfileClick = () => {
-    navigate('/settings')
-  }
-
-  const addMockData = (meals) => {
-    return meals.map((meal) => ({
-      ...meal,
-      rating: (Math.random() * 2 + 3).toFixed(1),
-      time: `${Math.floor(Math.random() * 30 + 10)} Mins`,
-    }))
-  }
-
-  const [chefName] = useState(
-    () => CHEF_NAMES[Math.floor(Math.random() * CHEF_NAMES.length)],
-  )
-
-  const [mealEmoji] = useState(
-    () => MEAL_EMOJIS[Math.floor(Math.random() * MEAL_EMOJIS.length)],
-  )
-
+  /**
+   * Fetches and displays a random meal from the user's favorite area.
+   * Adds enhanced metadata (rating between 4.5-4.9) to highlight its popularity.
+   */
   useEffect(() => {
     const fetchAreaMeal = async () => {
       try {
@@ -168,11 +186,27 @@ function HomeWeb() {
     fetchAreaMeal()
   }, [])
 
-  const [showComingSoon, setShowComingSoon] = useState(false)
-  const [showTrendingComingSoon, setShowTrendingComingSoon] = useState(false)
+  // Handler functions
+  const handleSearchClick = () => {
+    navigate('/search')
+  }
+
+  const handleProfileClick = () => {
+    navigate('/settings')
+  }
+
+  // Helper functions
+  const addMockData = (meals) => {
+    return meals.map((meal) => ({
+      ...meal,
+      rating: (Math.random() * 2 + 3).toFixed(1),
+      time: `${Math.floor(Math.random() * 30 + 10)} Mins`,
+    }))
+  }
 
   return (
     <>
+      {/* Header with Logo and Profile */}
       <H.WebHeader>
         <H.WebLogo>
           <img src={logo} alt="Recipeasy" height="40" />
@@ -186,6 +220,7 @@ function HomeWeb() {
       </H.WebHeader>
 
       <H.WebContainer>
+        {/* Search Section */}
         <H.WebSearchSection>
           <H.WebSectionTitle>
             <span>🔍</span>
@@ -206,6 +241,7 @@ function HomeWeb() {
           </SearchBarContainer>
         </H.WebSearchSection>
 
+        {/* Category Section with Meal Grid */}
         <H.WebCategorySection>
           <H.WebSectionTitle>
             <span>💯</span>
@@ -258,6 +294,7 @@ function HomeWeb() {
           )}
         </H.WebCategorySection>
 
+        {/* Featured Section with Area Meal and Trending */}
         <H.WebFeaturedSection>
           <H.WebSectionTitle>
             <span>🔥</span>
@@ -289,6 +326,7 @@ function HomeWeb() {
         </H.WebFeaturedSection>
       </H.WebContainer>
 
+      {/* Coming Soon Modals */}
       {showComingSoon && (
         <H.ModalOverlay>
           <H.ComingSoonModal>

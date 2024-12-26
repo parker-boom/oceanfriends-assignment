@@ -7,18 +7,31 @@ import { RiFilterOffLine } from 'react-icons/ri'
 // Styles
 import * as F from './filter.styles'
 
+/**
+ * FilterWeb - Desktop version of the recipe filter interface.
+ * Provides a modal-based filter experience with expanded viewing area.
+ * Features:
+ * - Side-by-side category and area sections
+ * - Favorite options prioritized
+ * - Immediate visual feedback
+ * - Persistent filter storage
+ * - Modal-based interaction
+ */
 function FilterWeb({ onClose }) {
-  // Category
+  // Category-related state
   const [categories, setCategories] = useState([])
-  const favoriteCategory = localStorage.getItem('favoriteCategory')
   const [selectedCategories, setSelectedCategories] = useState([])
+  const favoriteCategory = localStorage.getItem('favoriteCategory')
 
-  // Area
-  const [selectedAreas, setSelectedAreas] = useState([])
+  // Area-related state
   const [areas, setAreas] = useState([])
+  const [selectedAreas, setSelectedAreas] = useState([])
   const favoriteArea = localStorage.getItem('favoriteArea')
 
-  // Load saved filters on mount
+  /**
+   * Loads previously selected filters from localStorage.
+   * Ensures filter persistence across modal opens/closes.
+   */
   useEffect(() => {
     const savedCategories = JSON.parse(
       localStorage.getItem('selectedCategories') || '[]',
@@ -28,7 +41,10 @@ function FilterWeb({ onClose }) {
     setSelectedAreas(savedAreas)
   }, [])
 
-  // Fetch filter options
+  /**
+   * Fetches available filter options from the API.
+   * Categories and areas are fetched together to minimize API calls.
+   */
   useEffect(() => {
     const fetchFilters = async () => {
       try {
@@ -43,7 +59,7 @@ function FilterWeb({ onClose }) {
     fetchFilters()
   }, [])
 
-  // Handle category selection
+  // Handler functions
   const handleCategorySelect = (category) => {
     setSelectedCategories((prev) =>
       prev.includes(category)
@@ -52,14 +68,12 @@ function FilterWeb({ onClose }) {
     )
   }
 
-  // Handle area selection
   const handleAreaSelect = (area) => {
     setSelectedAreas((prev) =>
       prev.includes(area) ? prev.filter((a) => a !== area) : [...prev, area],
     )
   }
 
-  // Reset all filters
   const handleResetAll = () => {
     setSelectedCategories([])
     setSelectedAreas([])
@@ -67,7 +81,6 @@ function FilterWeb({ onClose }) {
     localStorage.removeItem('selectedAreas')
   }
 
-  // Apply filters
   const handleApplyFilters = () => {
     localStorage.setItem(
       'selectedCategories',
@@ -77,7 +90,10 @@ function FilterWeb({ onClose }) {
     onClose()
   }
 
-  // Helper to sort items with favorite first
+  /**
+   * Helper function to sort items with user's favorite option first.
+   * Used for both category and area lists to prioritize preferred options.
+   */
   const sortWithFavoriteFirst = (items, favorite) => {
     return items.sort((a, b) => {
       if (a === favorite) return -1
@@ -140,6 +156,7 @@ function FilterWeb({ onClose }) {
         </F.WebFilterSection>
       </F.WebFilterContent>
 
+      {/* Action Buttons */}
       <F.WebFilterActions>
         <F.WebResetButton onClick={handleResetAll}>
           <RiFilterOffLine size={16} />
@@ -153,4 +170,5 @@ function FilterWeb({ onClose }) {
   )
 }
 
+// Used in index.js, accessed only through search
 export default FilterWeb
