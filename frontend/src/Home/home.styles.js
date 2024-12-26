@@ -398,3 +398,55 @@ export const LoadingPlaceholder = styled.div`
   opacity: ${(props) => (props.loading ? 0.7 : 1)};
   transition: opacity 0.3s ease;
 `
+
+export const ComingSoonModal = styled.div`
+  background: white;
+  padding: 24px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 300px;
+  animation: ${fadeInUp} 0.3s ease forwards;
+`
+
+export const ComingSoonTitle = styled.h3`
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  text-align: center;
+`
+
+export const ComingSoonSubtitle = styled.p`
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+  margin-bottom: 24px;
+`
+
+export const OkayButton = styled.button`
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  background: #29942e;
+  color: white;
+  transition: all 0.2s ease;
+
+  &:hover {
+    opacity: 0.9;
+  }
+`
+
+export const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+`

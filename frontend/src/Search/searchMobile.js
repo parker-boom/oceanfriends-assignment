@@ -39,6 +39,7 @@ function SearchMobile() {
   const [results, setResults] = useState([])
   const [resultMetadata, setResultMetadata] = useState({})
   const [isLoading, setIsLoading] = useState(false)
+  const [showComingSoon, setShowComingSoon] = useState(false)
 
   // Load filters on mount
   useEffect(() => {
@@ -214,7 +215,10 @@ function SearchMobile() {
       ) : (
         <S.ResultsContainer>
           {results.map((result) => (
-            <S.ResultItem key={result.id}>
+            <S.ResultItem
+              key={result.id}
+              onClick={() => setShowComingSoon(true)}
+            >
               <S.ResultImage>
                 <img src={result.image} alt={result.title} />
               </S.ResultImage>
@@ -231,6 +235,20 @@ function SearchMobile() {
             </S.ResultItem>
           ))}
         </S.ResultsContainer>
+      )}
+
+      {showComingSoon && (
+        <S.ModalOverlay>
+          <S.ComingSoonModal>
+            <S.ComingSoonTitle>Coming Soon! 🚧</S.ComingSoonTitle>
+            <S.ComingSoonSubtitle>
+              Full recipe details will be added soon
+            </S.ComingSoonSubtitle>
+            <S.OkayButton onClick={() => setShowComingSoon(false)}>
+              Okay
+            </S.OkayButton>
+          </S.ComingSoonModal>
+        </S.ModalOverlay>
       )}
     </Container>
   )

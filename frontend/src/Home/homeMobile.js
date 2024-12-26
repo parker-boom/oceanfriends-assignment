@@ -206,7 +206,7 @@ function HomeMobile() {
     fetchAreaMeal()
   }, [])
 
-  // Add loading state for initial page load
+  // Loading state for initial page load
   const [pageLoading, setPageLoading] = useState(true)
 
   useEffect(() => {
@@ -218,9 +218,15 @@ function HomeMobile() {
     return () => clearTimeout(timer)
   }, [])
 
+  // Modal for meal details coming soon
+  const [showComingSoon, setShowComingSoon] = useState(false)
+
+  // Modal for trending page coming soon
+  const [showTrendingComingSoon, setShowTrendingComingSoon] = useState(false)
+
   // Update the loading check in render
   if (pageLoading) {
-    return null // Or a loading skeleton if you prefer
+    return null
   }
 
   return (
@@ -290,7 +296,10 @@ function HomeMobile() {
         ) : (
           <H.MealGrid>
             {meals.slice(0, 2).map((meal) => (
-              <H.MealCard key={meal.idMeal}>
+              <H.MealCard
+                key={meal.idMeal}
+                onClick={() => setShowComingSoon(true)}
+              >
                 <H.MealImage src={meal.strMealThumb} alt={meal.strMeal} />
                 <H.MealInfo>
                   <H.MealTitle>{meal.strMeal}</H.MealTitle>
@@ -310,7 +319,7 @@ function HomeMobile() {
         <H.AreaTitle>{'🔥 Your Next Favorite Dish'}</H.AreaTitle>
         {areaMeal && (
           <H.AreaContent>
-            <H.MainAreaCard>
+            <H.MainAreaCard onClick={() => setShowComingSoon(true)}>
               <H.ChefImage>
                 <img src={areaMeal.strMealThumb} alt={areaMeal.strMeal} />
               </H.ChefImage>
@@ -326,7 +335,7 @@ function HomeMobile() {
                 </H.AreaMetadata>
               </div>
             </H.MainAreaCard>
-            <H.SeeMoreButton>
+            <H.SeeMoreButton onClick={() => setShowTrendingComingSoon(true)}>
               <div>
                 <MdChevronRight size={24} />
               </div>
@@ -334,6 +343,35 @@ function HomeMobile() {
           </H.AreaContent>
         )}
       </H.AreaSection>
+
+      {/* Modal Component */}
+      {showComingSoon && (
+        <H.ModalOverlay>
+          <H.ComingSoonModal>
+            <H.ComingSoonTitle>Coming Soon! 🚧</H.ComingSoonTitle>
+            <H.ComingSoonSubtitle>
+              Full information on meals will be added soon
+            </H.ComingSoonSubtitle>
+            <H.OkayButton onClick={() => setShowComingSoon(false)}>
+              Okay
+            </H.OkayButton>
+          </H.ComingSoonModal>
+        </H.ModalOverlay>
+      )}
+
+      {showTrendingComingSoon && (
+        <H.ModalOverlay>
+          <H.ComingSoonModal>
+            <H.ComingSoonTitle>Coming Soon! 🚧</H.ComingSoonTitle>
+            <H.ComingSoonSubtitle>
+              Full discovery page for trending meals coming soon
+            </H.ComingSoonSubtitle>
+            <H.OkayButton onClick={() => setShowTrendingComingSoon(false)}>
+              Okay
+            </H.OkayButton>
+          </H.ComingSoonModal>
+        </H.ModalOverlay>
+      )}
     </H.Container>
   )
 }
