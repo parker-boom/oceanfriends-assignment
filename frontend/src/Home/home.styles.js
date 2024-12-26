@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import { AiFillStar } from 'react-icons/ai'
 import { staggeredFadeIn, fadeInUp } from '../shared/animations.styles'
 
 export const Container = styled.div`
@@ -449,4 +448,178 @@ export const ModalOverlay = styled.div`
   align-items: center;
   justify-content: center;
   z-index: 100;
+`
+
+// Web-specific styled components
+export const WebHeader = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: white;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 48px;
+  z-index: 1000;
+`
+
+export const WebLogo = styled.div`
+  font-size: 28px;
+  font-weight: 800;
+  background: linear-gradient(45deg, #29942e, #45a049);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+`
+
+export const WebContainer = styled.div`
+  padding: 104px 48px 48px;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  min-height: 100vh;
+  overflow-x: hidden;
+`
+
+export const WebSectionTitle = styled.h2`
+  font-size: 32px;
+  font-weight: 800;
+  color: #000000;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  span {
+    font-size: 28px;
+  }
+`
+
+export const WebSearchSection = styled.div`
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px 0;
+  text-align: center;
+
+  ${WebSectionTitle} {
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+`
+
+export const WebCategorySection = styled(CategorySection)`
+  padding: 0;
+
+  ${WebSectionTitle} {
+    margin-bottom: 12px;
+  }
+
+  ${CategoryScroll} {
+    margin: 0;
+    padding: 16px 0;
+    justify-content: flex-start;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  ${MealGrid} {
+    grid-template-columns: repeat(4, 1fr);
+    height: auto;
+    gap: 24px;
+  }
+
+  ${MealCard} {
+    height: 240px;
+  }
+
+  ${MealImage} {
+    height: 160px;
+  }
+
+  ${MealTitle} {
+    font-size: 16px;
+  }
+
+  ${MealMetadata} {
+    font-size: 14px;
+  }
+`
+
+export const WebFeaturedSection = styled.div`
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  margin-top: 24px;
+
+  ${WebSectionTitle} {
+    grid-column: 1 / -1;
+    margin-bottom: 5px;
+  }
+
+  ${MainAreaCard} {
+    height: 100%;
+    padding: 24px;
+  }
+
+  ${ChefImage} {
+    width: 180px;
+    height: 180px;
+  }
+
+  ${AreaMealTitle} h3 {
+    font-size: 24px;
+  }
+
+  ${ChefName} {
+    font-size: 16px;
+  }
+
+  ${AreaMetadata} {
+    font-size: 16px;
+  }
+`
+
+export const WebTrendingPreview = styled.div`
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+    color: #29942e;
+  }
+
+  p {
+    font-size: 16px;
+    color: #666666;
+    margin: 0;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.16);
+  }
 `
