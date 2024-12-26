@@ -120,15 +120,13 @@ export const ResetFiltersButton = styled.button`
 `
 
 export const ResultsContainer = styled.div`
-  padding: 5px 24px 24px 24px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
+  padding: 5px 24px 24px 24px;
   overflow-y: auto;
-  max-height: 500px;
   -webkit-overflow-scrolling: touch;
   padding-bottom: 100px;
-  margin-bottom: 10px;
 
   &::-webkit-scrollbar {
     display: none;
@@ -144,17 +142,8 @@ export const ResultItem = styled.div`
   border-radius: 16px;
   overflow: hidden;
   background: white;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: transform 0.2s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
 `
 
 export const ResultImage = styled.div`
@@ -312,4 +301,176 @@ export const OkayButton = styled.button`
   &:hover {
     opacity: 0.9;
   }
+`
+
+// Web-specific styled components
+export const WebSearchSection = styled.div`
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px 0;
+  text-align: center;
+`
+
+export const WebSearchTitle = styled.h1`
+  font-size: 32px;
+  font-weight: 800;
+  color: #000000;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  span {
+    font-size: 28px;
+  }
+`
+
+export const WebFilterButton = styled.div`
+  width: ${(props) => (props.hasFilters ? '350px' : '100px')};
+  margin: 16px auto 0;
+  padding: ${(props) => (props.hasFilters ? '12px 16px' : '10px')};
+  background: #f5f5f5;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: ${(props) =>
+    props.hasFilters ? 'space-between' : 'center'};
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #666666;
+  font-weight: 500;
+  font-size: 14px;
+
+  &:hover {
+    transform: translateY(-1px);
+    background: #eeeeee;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+`
+
+export const WebActiveFiltersBar = styled(ActiveFiltersBar)`
+  max-width: 800px;
+  margin: 0 auto 24px;
+  padding: 12px 24px;
+`
+
+export const WebResultsHeader = styled(ResultsHeader)`
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  justify-content: flex-start;
+`
+
+export const WebResultsContainer = styled(ResultsContainer)`
+  width: 100%;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+
+  ${ResultItem} {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%;
+    border-radius: 24px;
+    overflow: hidden;
+    background: white;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.16);
+    }
+  }
+
+  ${ResultImage} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  ${ResultOverlay} {
+    padding: 24px;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.9) 0%,
+      rgba(0, 0, 0, 0.5) 60%,
+      transparent 100%
+    );
+  }
+
+  ${ResultTitle} {
+    font-size: 20px;
+    margin-bottom: 8px;
+    -webkit-line-clamp: 2;
+    line-height: 1.4;
+  }
+
+  ${ResultChef} {
+    font-size: 14px;
+  }
+
+  ${RatingBadge} {
+    padding: 6px 12px;
+    font-size: 14px;
+    right: 16px;
+    top: 16px;
+  }
+`
+
+export const WebFilterOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  animation: fadeIn 0.2s ease;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+`
+
+export const FilterContent = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+`
+
+export const FilterText = styled.span`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
