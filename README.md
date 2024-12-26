@@ -10,20 +10,34 @@ A mobile-first recipe discovery application built with React, using TheMealDB AP
 
 The app will run on [http://localhost:3000](http://localhost:3000)
 
-## Using the App
+## Walkthrough
 
-### Core Features
+1. **Onboarding**
 
-- Complete onboarding by setting your name, profile picture, and favorite cuisine preferences
-- Home page displays personalized recommendations based on your preferences
-- Search functionality with category and area filters
-- Settings page for updating preferences and switching between mobile/desktop views
+   - Enter your name
+   - Select a profile picture from the 5 options
+   - Choose your favorite food category
+   - Select your preferred cuisine area
 
-### Navigation
+2. **Home Page**
 
-- **Home**: View recommended recipes and trending meals
-- **Search**: Access via the search bar, use filters in top right
-- **Settings**: Click profile picture to access
+   - View your personalized "For You" category based on preferences
+   - Scroll horizontally through food categories
+   - See two recommended meals from your selected category
+   - Find a trending meal from your preferred cuisine area
+
+3. **Search Experience**
+
+   - Click the search bar to navigate to search page
+   - Type to instantly see search results
+   - Click the filter icon in top right to access filters
+   - Select multiple categories and areas to refine results
+   - View up to 8 recipe cards with ratings and chefs
+
+4. **Settings & Desktop View**
+   - Click your profile picture to access settings
+   - Update your name, profile picture, or preferences
+   - Click "Switch to desktop" at the bottom to view desktop layout
 
 ### Implementation Notes
 
