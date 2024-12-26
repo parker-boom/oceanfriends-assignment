@@ -128,7 +128,8 @@ export const FilterGrid = styled.div`
 
 export const FilterOption = styled.button`
   width: 100%;
-  padding: 8px 16px;
+  height: 36px;
+  padding: 0 16px;
   border-radius: 100px;
   border: 2px solid ${(props) => (props.selected ? '#29942e' : '#e0e0e0')};
   background: ${(props) => (props.selected ? '#29942e' : 'white')};
@@ -140,6 +141,7 @@ export const FilterOption = styled.button`
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  flex-shrink: 0;
 
   &:hover {
     border-color: #29942e;
@@ -201,5 +203,149 @@ export const ResetButton = styled.button`
 
   svg {
     color: #666666;
+  }
+`
+
+// Web-specific filter styles
+export const WebFilterOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  animation: fadeIn 0.2s ease;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+`
+
+export const WebFilterContainer = styled.div`
+  width: 900px;
+  height: 600px;
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  animation: slideUp 0.3s ease;
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+`
+
+export const WebFilterContent = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  padding: 32px;
+  flex: 1;
+  overflow: hidden;
+`
+
+export const WebFilterSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #eaeaea;
+  overflow: hidden;
+`
+
+export const WebFilterHeader = styled.div`
+  padding: 16px;
+  background: #f8f8f8;
+  border-bottom: 1px solid #eaeaea;
+`
+
+export const WebFilterGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+  padding: 16px;
+  overflow-y: auto;
+  max-height: 400px;
+  align-items: start;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #e0e0e0;
+    border-radius: 4px;
+  }
+`
+
+export const WebFilterActions = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 24px 32px;
+  border-top: 1px solid #eaeaea;
+  align-items: center;
+`
+
+export const WebResetButton = styled.button`
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #f5f5f5;
+  color: #666666;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &:hover {
+    background: #eeeeee;
+  }
+`
+
+export const WebApplyButton = styled.button`
+  width: 200px;
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  background: #29942e;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 `
