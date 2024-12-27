@@ -1,10 +1,8 @@
 // Libraries
 import React, { useEffect, useRef, useState } from 'react'
-import { BiSearch } from 'react-icons/bi'
 import { FiFilter } from 'react-icons/fi'
 import { MdArrowForward } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
-import { RiFilterOffLine } from 'react-icons/ri'
 import { AiFillStar } from 'react-icons/ai'
 import FilterWeb from './filterWeb'
 
@@ -125,11 +123,6 @@ function SearchWeb() {
    * Triggers search when either the search term or filters change.
    * Debounced internally by the handleSearch callback.
    */
-  useEffect(() => {
-    if (searchTerm.trim()) {
-      handleSearch()
-    }
-  }, [handleSearch, searchTerm, activeFilters])
 
   // Handler functions
   const handleSearch = React.useCallback(async () => {
@@ -170,6 +163,12 @@ function SearchWeb() {
     }
   }, [searchTerm, activeFilters])
 
+  useEffect(() => {
+    if (searchTerm.trim()) {
+      handleSearch()
+    }
+  }, [handleSearch, searchTerm, activeFilters])
+
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       handleSearch()
@@ -199,12 +198,6 @@ function SearchWeb() {
 
   const handleBack = () => {
     navigate('/')
-  }
-
-  const handleResetFilters = () => {
-    localStorage.removeItem('selectedCategories')
-    localStorage.removeItem('selectedAreas')
-    setActiveFilters({ categories: [], areas: [] })
   }
 
   const handleProfileClick = () => {

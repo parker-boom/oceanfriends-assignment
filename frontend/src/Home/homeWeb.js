@@ -1,5 +1,5 @@
 // Libraries
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { BiSearch } from 'react-icons/bi'
 import { AiFillHeart, AiFillStar } from 'react-icons/ai'
@@ -63,7 +63,6 @@ function HomeWeb() {
   const navigate = useNavigate()
 
   // User-related state
-  const userName = localStorage.getItem('userName')
   const userPfp = localStorage.getItem('userPfp')
 
   // Category-related state
